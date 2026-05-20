@@ -1,0 +1,61 @@
+import Calculator from '@/components/Calculator';
+
+export const metadata = { title: 'Uganda → Kenya USDT Corridor | AfricaTeamPay' };
+const WA = process.env.NEXT_PUBLIC_COACH_WHATSAPP || '256784277664';
+
+export default function KenyaPage() {
+  return (
+    <>
+      <section style={{ position: 'relative', overflow: 'hidden', padding: '80px 24px 60px' }}>
+        <div className="hero-glow" />
+        <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative' }}>
+          <span style={{ fontSize: 56 }}>🇰🇪</span>
+          <p className="label" style={{ margin: '16px 0 12px' }}>Uganda → Kenya Corridor</p>
+          <h1 style={{ fontFamily: 'var(--font-bebas)', fontSize: 'clamp(36px,7vw,68px)', lineHeight: 1.0, letterSpacing: '0.03em', marginBottom: 20 }}>
+            CROSS-BORDER TRADERS & FAMILIES<br /><span style={{ color: '#D4A017' }}>INSTANT SETTLEMENT VIA USDT</span>
+          </h1>
+          <p style={{ color: '#aaa', fontSize: 16, lineHeight: 1.7, maxWidth: 580, marginBottom: 32 }}>
+            Send KES to M-Pesa or UGX to MTN MoMo instantly. USDT is the rail. No bank involved. No 2-day wait.
+          </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <a href="#calculator" className="btn-gold">Calculate My Transfer →</a>
+            <a href={`https://wa.me/${WA}`} target="_blank" rel="noreferrer" className="btn-outline">WhatsApp Coach</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="calculator" style={{ padding: '48px 24px 64px' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          <div className="card" style={{ padding: 32 }}>
+            <Calculator defaultCorridor="kenya" />
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: '0 24px 64px', background: 'rgba(17,17,17,0.6)' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto', paddingTop: 48 }}>
+          <p className="label" style={{ marginBottom: 12 }}>FAQ</p>
+          {[
+            { q: 'How does the recipient get KES?', a: 'They sell USDT via a local Kenyan exchange or Binance P2P. KES lands in M-Pesa within 30–60 minutes.' },
+            { q: 'Can I send from Kenya to Uganda?', a: 'Yes — the corridor works both ways. Contact Coach to set up a Kenya → Uganda transfer.' },
+            { q: 'What is the minimum?', a: 'Minimum 500,000 UGX (~KES 17,500). No maximum.' },
+            { q: 'How long does it take?', a: 'Under 1 hour during business hours (8am–8pm EAT).' },
+          ].map(({ q, a }) => (
+            <div key={q} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '20px 0' }}>
+              <p style={{ fontWeight: 600, marginBottom: 8 }}>{q}</p>
+              <p style={{ color: '#888', lineHeight: 1.7, fontSize: 14 }}>{a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section style={{ padding: '64px 24px', textAlign: 'center' }}>
+        <div className="card-gold" style={{ maxWidth: 500, margin: '0 auto', padding: 36 }}>
+          <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 32, letterSpacing: '0.04em', marginBottom: 8 }}>START YOUR TRANSFER</p>
+          <p style={{ color: '#aaa', marginBottom: 24 }}>WhatsApp Coach to begin.</p>
+          <a href={`https://wa.me/${WA}`} target="_blank" rel="noreferrer" className="btn-gold">WhatsApp Coach →</a>
+        </div>
+      </section>
+    </>
+  );
+}
