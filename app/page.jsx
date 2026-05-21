@@ -45,15 +45,8 @@ export default async function HomePage() {
             Diaspora in UK, UAE, USA &amp; Saudi? Send money home to Uganda instantly.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/calculate" className="btn-gold">Calculate My Transfer →</Link>
-            <a
-              href={`https://wa.me/${WA}`}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-outline"
-            >
-              WhatsApp Coach →
-            </a>
+            <Link href="/pay-supplier" className="btn-gold">Pay Your Supplier →</Link>
+            <Link href="/send-to-uganda" className="btn-outline">Send Money Home →</Link>
           </div>
           {rates && !rates.is_fallback && (
             <p style={{ color: '#444', fontSize: 12, marginTop: 20, fontFamily: 'var(--font-mono)' }}>
@@ -147,15 +140,9 @@ export default async function HomePage() {
                 USA · UAE · UK · Saudi Arabia · Canada · Australia · Germany · Qatar · Kenya
               </p>
             </div>
-            <a
-              href={`https://wa.me/${WA}?text=Hi+Coach,+I+want+to+send+money+to+Uganda+from+abroad`}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-gold"
-              style={{ whiteSpace: 'nowrap' }}
-            >
-              WhatsApp Coach →
-            </a>
+            <Link href="/send-to-uganda" className="btn-gold" style={{ whiteSpace: 'nowrap' }}>
+              Send Money Home →
+            </Link>
           </div>
         </div>
       </section>
