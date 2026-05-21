@@ -171,7 +171,7 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
   - ✅ `app/api/disputes/route.js` — Dispute API (Telegram Coach notification)
   - ✅ Railway PostgreSQL schema applied (9 tables, confirmed)
 - 🔄 Session 5: Partial — see below
-- 🔜 Session 6: Supplier directory + PWA
+- ✅ Session 6: TxStatusCard + disputes management + blockchain auto-confirm cron
 - 🔜 Session 7: Accounts + KYC + multilingual
 
 ## Pages Added in Session 4
@@ -203,7 +203,7 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
 - `app/suppliers/page.jsx` — Supplier directory with country tabs, submit form.
 - `app/receipt/[reference]/page.jsx` — Server-rendered printable receipt (print-to-PDF via browser).
 
-### 🔴 Incomplete — Must Finish Next Session
+### ✅ Completed in Session 6
 
 #### 1. TxStatusCard component (track page is broken without it)
 `app/track/[reference]/page.jsx` references `<TxStatusCard>` but the component was never written. The file has this placeholder where the old TX hash block was:
@@ -239,7 +239,21 @@ export async function GET(request) {
 }
 ```
 
-## What Next Session Must Build (Session 5 Completion + Session 6)
+## Session 6 — What Was Built
+
+### ✅ Done
+- `app/track/[reference]/page.jsx` — Added `TxStatusCard` client component. Polls `/api/tx-status` every 60s while unconfirmed. Shows hash (truncated), confirmations count, confirmed/pending badge, explorer link, Download Receipt button.
+- `app/api/disputes/route.js` — Added `GET` handler (admin-auth required) returning all disputes with optional `?status=` filter. Updated `POST` to also persist disputes to DB via `createDispute()`.
+- `app/admin/page.jsx` — Added Disputes tab alongside Orders tab. Shows dispute table with columns: Reference, Issue, Expected, Received, Contact, Filed, Status. Action buttons: Resolve, Refund, Need Info. Modal for resolve/refund with optional admin response text. Auto-loads disputes when tab is active.
+- `app/api/blockchain/monitor/route.js` — Cron endpoint. Fetches all `sending` orders with `blockchain_tx_hash`, calls TronGrid via `checkTxStatus()`, auto-updates to `completed` and sends Telegram if TX confirmed. Secured with `CRON_SECRET` env var.
+- `vercel.json` — Cron schedule: `/api/blockchain/monitor` every 2 minutes.
+
+### Environment Variables Added (Session 6)
+| Variable | Purpose |
+|----------|---------|
+| `CRON_SECRET` | Bearer token Vercel sends to cron endpoints (optional but recommended) |
+
+## What Next Session Must Build (Session 7)
 
 ## Hard Rules (Do Not Violate)
 

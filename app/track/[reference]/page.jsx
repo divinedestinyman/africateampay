@@ -4,6 +4,107 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { STATUS_LABELS, CHAINS, formatDate } from '@/lib/utils';
 
+const EXPLORER = {
+  trc20:   h => `https://tronscan.org/#/transaction/${h}`,
+  bep20:   h => `https://bscscan.com/tx/${h}`,
+  polygon: h => `https://polygonscan.com/tx/${h}`,
+  erc20:   h => `https://etherscan.io/tx/${h}`,
+  solana:  h => `https://solscan.io/tx/${h}`,
+  base:    h => `https://basescan.org/tx/${h}`,
+};
+
+function TxStatusCard({ hash, chain, reference }) {
+  const [txStatus, setTxStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const poll = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `/api/tx-status?hash=${encodeURIComponent(hash)}&chain=${encodeURIComponent(chain)}`
+      );
+      const data = await res.json();
+      setTxStatus(data);
+    } catch {}
+    setLoading(false);
+  }, [hash, chain]);
+
+  useEffect(() => { poll(); }, [poll]);
+
+  useEffect(() => {
+    if (txStatus?.confirmed) return;
+    const id = setInterval(poll, 60000);
+    return () => clearInterval(id);
+  }, [poll, txStatus?.confirmed]);
+
+  const explorerUrl = (EXPLORER[chain] || EXPLORER.trc20)(hash);
+  const truncHash = hash.length > 20 ? `${hash.slice(0, 10)}…${hash.slice(-8)}` : hash;
+  const confirmed = txStatus?.confirmed;
+
+  return (
+    <div className="card" style={{ padding: 20, marginBottom: 24 }}>
+      <p className="label" style={{ marginBottom: 12 }}>Blockchain Transaction</p>
+
+      {loading ? (
+        <p style={{ fontSize: 13, color: '#555' }}>Checking on-chain status…</p>
+      ) : (
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+            <a
+              href={explorerUrl}
+              target="_blank"
+              rel="noreferrer"
+              style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#D4A017', wordBreak: 'break-all' }}
+            >
+              {truncHash} ↗
+            </a>
+            <span
+              style={{
+                padding: '3px 10px',
+                borderRadius: 20,
+                fontSize: 12,
+                fontWeight: 600,
+                background: confirmed ? 'rgba(76,175,80,0.1)' : 'rgba(255,165,0,0.1)',
+                color: confirmed ? '#4CAF50' : '#FFA500',
+                border: `1px solid ${confirmed ? 'rgba(76,175,80,0.3)' : 'rgba(255,165,0,0.3)'}`,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {confirmed ? '✅ Confirmed' : '⏳ Pending'}
+            </span>
+          </div>
+
+          {txStatus?.confirmations != null && (
+            <p style={{ fontSize: 13, color: '#666', marginBottom: 12 }}>
+              {Number(txStatus.confirmations).toLocaleString()} block confirmation{txStatus.confirmations !== 1 ? 's' : ''}
+            </p>
+          )}
+
+          {txStatus?.manualVerifyRequired && (
+            <p style={{ fontSize: 12, color: '#555', marginBottom: 12 }}>
+              Manual verification required — check the explorer link above.
+            </p>
+          )}
+
+          <a
+            href={`/receipt/${reference}`}
+            style={{
+              display: 'inline-block',
+              padding: '8px 16px',
+              borderRadius: 6,
+              border: '1px solid rgba(212,160,23,0.3)',
+              color: '#D4A017',
+              fontSize: 13,
+              textDecoration: 'none',
+            }}
+          >
+            ↓ Download Receipt
+          </a>
+        </>
+      )}
+    </div>
+  );
+}
+
 const TIMELINE = [
   {
     key: 'rate_locked',

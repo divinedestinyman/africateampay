@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { createDispute, getDisputes } from '@/lib/db';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_ADMIN_CHAT_ID = process.env.TELEGRAM_ADMIN_CHAT_ID || '378061184';
@@ -19,6 +20,17 @@ async function sendTelegram(text) {
       }
     );
   } catch (_) {}
+}
+
+export async function GET(request) {
+  const token = request.headers.get('x-admin-token');
+  if (!token || token !== process.env.ADMIN_TOKEN) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const { searchParams } = new URL(request.url);
+  const status = searchParams.get('status') || undefined;
+  const disputes = await getDisputes({ status });
+  return NextResponse.json({ disputes });
 }
 
 const ISSUE_LABELS = {
@@ -49,6 +61,16 @@ export async function POST(request) {
       );
     }
 
+    const dispute = await createDispute({
+      order_reference: reference,
+      tx_hash: tx_hash || null,
+      issue_type,
+      expected_amount: expected_amount || null,
+      received_amount: received_amount || null,
+      details: details || null,
+      contact_email,
+    });
+
     const issueLabel = ISSUE_LABELS[issue_type] || issue_type;
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
@@ -69,7 +91,7 @@ export async function POST(request) {
 
     await sendTelegram(telegramMsg);
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, dispute });
   } catch (err) {
     console.error('Dispute API error:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
