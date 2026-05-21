@@ -22,7 +22,24 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { customer_name, customer_whatsapp, customer_wallet, corridor_id, amount_ugx, notes } = body;
+    const {
+      customer_name,
+      customer_whatsapp,
+      customer_wallet,
+      corridor_id,
+      amount_ugx,
+      notes,
+      // new v2 fields
+      direction,
+      sender_email,
+      sending_chain,
+      settlement_method,
+      recipient_name,
+      recipient_account,
+      recipient_bank,
+      amount_foreign,
+      foreign_currency,
+    } = body;
 
     if (!corridor_id || !amount_ugx || amount_ugx < 500000) {
       return Response.json(
@@ -53,11 +70,20 @@ export async function POST(request) {
       customer_whatsapp: customer_whatsapp || null,
       customer_wallet: customer_wallet || null,
       corridor_id,
+      direction: direction || corridor.direction || 'outbound',
       amount_ugx: parseInt(amount_ugx),
       amount_usdt,
       fee_ugx,
       usdt_rate,
       notes: notes || null,
+      sender_email: sender_email || null,
+      sending_chain: sending_chain || 'trc20',
+      settlement_method: settlement_method || null,
+      recipient_name: recipient_name || null,
+      recipient_account: recipient_account || null,
+      recipient_bank: recipient_bank || null,
+      amount_foreign: amount_foreign ? parseFloat(amount_foreign) : null,
+      foreign_currency: foreign_currency || null,
     });
 
     // Notify Coach via Telegram (fire and forget)
@@ -67,10 +93,11 @@ export async function POST(request) {
       corridor_flag: corridor.flag,
     }).catch(() => {});
 
+    const wa = process.env.NEXT_PUBLIC_COACH_WHATSAPP || '256784277664';
     return Response.json({
       order: {
         ...order,
-        pay_to: `MTN MoMo: ${process.env.COACH_MOMO_NUMBER || 'MY_MOMO_NUMBER'}`,
+        whatsapp_coach: `https://wa.me/${wa}?text=Order+${order.reference}`,
         reference_note: `Use ${order.reference} as your payment reference`,
       },
     }, { status: 201 });

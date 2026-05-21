@@ -2,27 +2,45 @@
 import { useState, useEffect, useCallback } from 'react';
 import { formatDate, formatUGX, STATUS_LABELS, CORRIDORS } from '@/lib/utils';
 
-const TOKEN = typeof window !== 'undefined' ? document.cookie.match(/admin_auth=([^;]+)/)?.[1] : '';
-
 function authHeader() {
-  const m = document.cookie.match(/admin_auth=([^;]+)/);
+  const m = typeof document !== 'undefined' ? document.cookie.match(/admin_auth=([^;]+)/) : null;
   return m ? { 'x-admin-token': m[1] } : {};
 }
+
+const STATUS_FLOW = {
+  pending:          ['payment_received', 'cancelled'],
+  rate_locked:      ['payment_received', 'cancelled'],
+  payment_received: ['converting', 'sending', 'completed', 'refunded'],
+  converting:       ['sending', 'failed', 'refunded'],
+  sending:          ['completed', 'failed'],
+  completed:        [],
+  failed:           ['refunded'],
+  refunded:         [],
+  disputed:         ['completed', 'refunded', 'cancelled'],
+  cancelled:        [],
+  usdt_sent:        ['completed'],
+};
 
 export default function AdminPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(null); // { type, order }
+  const [modal, setModal] = useState(null);
   const [txHash, setTxHash] = useState('');
   const [newOrder, setNewOrder] = useState(null);
-  const [form, setForm] = useState({ customer_name:'', customer_whatsapp:'', customer_wallet:'', corridor_id:'china', amount_ugx:'', notes:'' });
+  const [filterStatus, setFilterStatus] = useState('');
+  const [form, setForm] = useState({
+    customer_name: '', customer_whatsapp: '', customer_wallet: '',
+    corridor_id: 'china', direction: 'outbound', amount_ugx: '',
+    sending_chain: 'trc20', settlement_method: '', notes: '',
+  });
 
   const load = useCallback(async () => {
-    const res = await fetch('/api/orders');
+    const url = filterStatus ? `/api/orders?status=${filterStatus}` : '/api/orders';
+    const res = await fetch(url);
     const data = await res.json();
     setOrders(data.orders || []);
     setLoading(false);
-  }, []);
+  }, [filterStatus]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -32,7 +50,8 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json', ...authHeader() },
       body: JSON.stringify({ status, ...extra }),
     });
-    setModal(null); setTxHash('');
+    setModal(null);
+    setTxHash('');
     load();
   }
 
@@ -41,22 +60,29 @@ export default function AdminPage() {
     const res = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, amount_ugx: parseInt(form.amount_ugx.replace(/,/g,'')) }),
+      body: JSON.stringify({ ...form, amount_ugx: parseInt(form.amount_ugx.replace(/,/g, '')) }),
     });
     const data = await res.json();
     setNewOrder(data.order);
-    setForm({ customer_name:'', customer_whatsapp:'', customer_wallet:'', corridor_id:'china', amount_ugx:'', notes:'' });
+    setForm({
+      customer_name: '', customer_whatsapp: '', customer_wallet: '',
+      corridor_id: 'china', direction: 'outbound', amount_ugx: '',
+      sending_chain: 'trc20', settlement_method: '', notes: '',
+    });
     load();
   }
 
   // Stats
   const thisMonth = orders.filter(o => new Date(o.created_at).getMonth() === new Date().getMonth());
-  const totalUgx = thisMonth.reduce((s, o) => s + (Number(o.amount_ugx)||0), 0);
-  const totalUsdt = orders.filter(o => o.status === 'usdt_sent' || o.status === 'completed').reduce((s, o) => s + (Number(o.amount_usdt)||0), 0);
-  const totalFees = thisMonth.reduce((s, o) => s + (Number(o.fee_ugx)||0), 0);
+  const totalUgx = thisMonth.reduce((s, o) => s + (Number(o.amount_ugx) || 0), 0);
+  const totalUsdt = orders
+    .filter(o => o.status === 'usdt_sent' || o.status === 'completed')
+    .reduce((s, o) => s + (Number(o.amount_usdt) || 0), 0);
+  const totalFees = thisMonth.reduce((s, o) => s + (Number(o.fee_ugx) || 0), 0);
+  const pendingCount = orders.filter(o => o.status === 'pending' || o.status === 'payment_received').length;
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
+    <div style={{ maxWidth: 1300, margin: '0 auto', padding: '32px 24px' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
         <div>
@@ -66,10 +92,13 @@ export default function AdminPage() {
           </h1>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button className="btn-gold" style={{ padding: '10px 18px', fontSize: 13 }} onClick={() => setModal({ type: 'new' })}>
+          <button className="btn-gold" style={{ padding: '10px 18px', fontSize: 13 }} onClick={() => { setModal({ type: 'new' }); setNewOrder(null); }}>
             + New Order
           </button>
-          <button className="btn-outline" style={{ padding: '10px 18px', fontSize: 13 }} onClick={async () => { await fetch('/api/admin/login', { method: 'DELETE' }); location.href = '/admin/login'; }}>
+          <button className="btn-outline" style={{ padding: '10px 18px', fontSize: 13 }} onClick={async () => {
+            await fetch('/api/admin/login', { method: 'DELETE' });
+            location.href = '/admin/login';
+          }}>
             Sign Out
           </button>
         </div>
@@ -78,6 +107,7 @@ export default function AdminPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16, marginBottom: 32 }}>
         {[
+          { label: 'Needs Attention', value: pendingCount, gold: pendingCount > 0 },
           { label: 'Orders This Month', value: thisMonth.length },
           { label: 'UGX Processed', value: `UGX ${totalUgx.toLocaleString()}`, mono: true },
           { label: 'USDT Sent (All)', value: `${totalUsdt.toFixed(2)} USDT`, mono: true },
@@ -92,20 +122,38 @@ export default function AdminPage() {
         ))}
       </div>
 
+      {/* Filters */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+        {['', 'pending', 'payment_received', 'completed', 'cancelled'].map(s => (
+          <button
+            key={s || 'all'}
+            onClick={() => setFilterStatus(s)}
+            style={{
+              padding: '6px 14px', fontSize: 12, borderRadius: 6, cursor: 'pointer',
+              border: `1px solid ${filterStatus === s ? '#D4A017' : 'rgba(255,255,255,0.1)'}`,
+              background: filterStatus === s ? 'rgba(212,160,23,0.1)' : 'transparent',
+              color: filterStatus === s ? '#D4A017' : '#666',
+            }}
+          >
+            {s || 'All'}
+          </button>
+        ))}
+      </div>
+
       {/* Orders table */}
       {loading ? (
         <p style={{ color: '#555' }}>Loading orders...</p>
       ) : orders.length === 0 ? (
         <div className="card" style={{ padding: 40, textAlign: 'center' }}>
-          <p style={{ color: '#555' }}>No orders yet. Create the first one above.</p>
+          <p style={{ color: '#555' }}>No orders yet.</p>
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                {['Reference','Customer','Amount','USDT','Corridor','Status','Created','Actions'].map(h => (
-                  <th key={h} style={{ padding: '10px 12px', textAlign: 'left', color: '#555', fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 400 }}>{h}</th>
+                {['Reference', 'Dir', 'Customer', 'Amount UGX', 'USDT', 'Corridor', 'Chain', 'Status', 'Created', 'Actions'].map(h => (
+                  <th key={h} style={{ padding: '10px 12px', textAlign: 'left', color: '#555', fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 400, whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -113,32 +161,56 @@ export default function AdminPage() {
               {orders.map(o => {
                 const sl = STATUS_LABELS[o.status] || { label: o.status, color: '#888' };
                 const cor = CORRIDORS[o.corridor_id] || { flag: '?', name: o.corridor_id };
+                const nextStatuses = STATUS_FLOW[o.status] || [];
+                const txLink = o.tron_tx_hash || o.blockchain_tx_hash;
                 return (
                   <tr key={o.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', color: '#D4A017' }}>{o.reference}</td>
-                    <td style={{ padding: '12px' }}>
-                      <div>{o.customer_name || '—'}</div>
-                      {o.customer_whatsapp && <a href={`https://wa.me/${o.customer_whatsapp?.replace(/\D/g,'')}`} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#4CAF50' }}>WA ↗</a>}
+                    <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', color: '#D4A017', whiteSpace: 'nowrap' }}>{o.reference}</td>
+                    <td style={{ padding: '12px', fontSize: 11, color: o.direction === 'inbound' ? '#4CAF50' : '#2196F3' }}>
+                      {o.direction === 'inbound' ? '↓ IN' : '↑ OUT'}
                     </td>
-                    <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: 12 }}>UGX {Number(o.amount_ugx).toLocaleString()}</td>
-                    <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#D4A017' }}>{Number(o.amount_usdt).toFixed(2)}</td>
-                    <td style={{ padding: '12px' }}>{cor.flag} {cor.name}</td>
-                    <td style={{ padding: '12px' }}><span className={sl.color} style={{ fontSize: 12 }}>{sl.label}</span></td>
-                    <td style={{ padding: '12px', color: '#555', fontSize: 11 }}>{formatDate(o.created_at)}</td>
+                    <td style={{ padding: '12px' }}>
+                      <div style={{ whiteSpace: 'nowrap' }}>{o.customer_name || '—'}</div>
+                      {o.customer_whatsapp && (
+                        <a href={`https://wa.me/${o.customer_whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#4CAF50' }}>WA ↗</a>
+                      )}
+                    </td>
+                    <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: 12, whiteSpace: 'nowrap' }}>
+                      {Number(o.amount_ugx).toLocaleString()}
+                    </td>
+                    <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#D4A017', whiteSpace: 'nowrap' }}>
+                      {Number(o.amount_usdt).toFixed(2)}
+                    </td>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>{cor.flag} {cor.name}</td>
+                    <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: 11, color: '#888' }}>
+                      {o.sending_chain || 'trc20'}
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <span style={{ fontSize: 12, color: sl.color, whiteSpace: 'nowrap' }}>{sl.label}</span>
+                    </td>
+                    <td style={{ padding: '12px', color: '#555', fontSize: 11, whiteSpace: 'nowrap' }}>{formatDate(o.created_at)}</td>
                     <td style={{ padding: '12px' }}>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        {/* Quick-action buttons for common transitions */}
                         {o.status === 'pending' && (
-                          <button className="btn-gold" style={{ padding: '6px 12px', fontSize: 11 }} onClick={() => updateStatus(o.id, 'payment_received')}>
-                            ✓ Payment
+                          <button className="btn-gold" style={{ padding: '6px 10px', fontSize: 11, whiteSpace: 'nowrap' }} onClick={() => updateStatus(o.id, 'payment_received')}>
+                            ✓ Paid
                           </button>
                         )}
-                        {o.status === 'payment_received' && (
-                          <button className="btn-gold" style={{ padding: '6px 12px', fontSize: 11 }} onClick={() => { setModal({ type: 'usdt', order: o }); setTxHash(''); }}>
+                        {(o.status === 'payment_received' || o.status === 'converting') && (
+                          <button className="btn-gold" style={{ padding: '6px 10px', fontSize: 11, whiteSpace: 'nowrap' }} onClick={() => { setModal({ type: 'send', order: o }); setTxHash(''); }}>
                             Send USDT
                           </button>
                         )}
-                        {o.tron_tx_hash && (
-                          <a href={`https://tronscan.org/#/transaction/${o.tron_tx_hash}`} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#D4A017', padding: '6px 0' }}>TX ↗</a>
+                        {nextStatuses.filter(s => !['payment_received', 'completed'].includes(s) || o.status !== 'pending').length > 0 && (
+                          <button className="btn-outline" style={{ padding: '6px 10px', fontSize: 11, whiteSpace: 'nowrap' }} onClick={() => setModal({ type: 'status', order: o })}>
+                            Status…
+                          </button>
+                        )}
+                        {txLink && (
+                          <a href={`https://tronscan.org/#/transaction/${txLink}`} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#D4A017', padding: '6px 0', whiteSpace: 'nowrap' }}>
+                            TX ↗
+                          </a>
                         )}
                       </div>
                     </td>
@@ -150,19 +222,51 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Modal: USDT sent */}
-      {modal?.type === 'usdt' && (
+      {/* Modal: Send USDT */}
+      {modal?.type === 'send' && (
         <ModalOverlay onClose={() => setModal(null)}>
-          <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 24, marginBottom: 4 }}>MARK USDT SENT</p>
-          <p style={{ color: '#888', fontSize: 13, marginBottom: 20 }}>
-            Order: {modal.order.reference} — {Number(modal.order.amount_usdt).toFixed(2)} USDT
+          <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 24, marginBottom: 4 }}>SEND USDT</p>
+          <p style={{ color: '#888', fontSize: 13, marginBottom: 4 }}>
+            {modal.order.reference} — {Number(modal.order.amount_usdt).toFixed(2)} USDT
           </p>
-          <label className="label" style={{ display: 'block', marginBottom: 8 }}>Tron TX Hash</label>
-          <input className="input" placeholder="Paste TronScan TX hash" value={txHash} onChange={e => setTxHash(e.target.value)} style={{ marginBottom: 16, fontFamily: 'var(--font-mono)', fontSize: 13 }} />
+          <p style={{ color: '#555', fontSize: 12, marginBottom: 20 }}>
+            Chain: {modal.order.sending_chain || 'trc20'} | Wallet: {modal.order.customer_wallet || 'Not provided'}
+          </p>
+          <label className="label" style={{ display: 'block', marginBottom: 8 }}>Blockchain TX Hash</label>
+          <input
+            className="input"
+            placeholder="Paste transaction hash"
+            value={txHash}
+            onChange={e => setTxHash(e.target.value)}
+            style={{ marginBottom: 16, fontFamily: 'var(--font-mono)', fontSize: 13 }}
+          />
           <div style={{ display: 'flex', gap: 10 }}>
-            <button className="btn-gold" disabled={!txHash.trim()} onClick={() => updateStatus(modal.order.id, 'usdt_sent', { tron_tx_hash: txHash.trim() })}>
-              Confirm Sent
+            <button className="btn-gold" disabled={!txHash.trim()} onClick={() => updateStatus(modal.order.id, 'completed', { blockchain_tx_hash: txHash.trim() })}>
+              Mark Complete
             </button>
+            <button className="btn-outline" disabled={!txHash.trim()} onClick={() => updateStatus(modal.order.id, 'usdt_sent', { blockchain_tx_hash: txHash.trim() })}>
+              Mark Sent
+            </button>
+            <button className="btn-outline" onClick={() => setModal(null)}>Cancel</button>
+          </div>
+        </ModalOverlay>
+      )}
+
+      {/* Modal: Status change */}
+      {modal?.type === 'status' && (
+        <ModalOverlay onClose={() => setModal(null)}>
+          <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 24, marginBottom: 4 }}>UPDATE STATUS</p>
+          <p style={{ color: '#888', fontSize: 13, marginBottom: 20 }}>{modal.order.reference} — currently: {modal.order.status}</p>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            {(STATUS_FLOW[modal.order.status] || []).map(s => {
+              const sl = STATUS_LABELS[s] || { label: s, color: '#888' };
+              return (
+                <button key={s} onClick={() => updateStatus(modal.order.id, s)}
+                  style={{ padding: '8px 16px', fontSize: 13, borderRadius: 6, border: `1px solid ${sl.color}`, background: 'transparent', color: sl.color, cursor: 'pointer' }}>
+                  → {sl.label}
+                </button>
+              );
+            })}
             <button className="btn-outline" onClick={() => setModal(null)}>Cancel</button>
           </div>
         </ModalOverlay>
@@ -176,8 +280,15 @@ export default function AdminPage() {
               <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 24, marginBottom: 4, color: '#4CAF50' }}>ORDER CREATED ✓</p>
               <p style={{ fontFamily: 'var(--font-mono)', fontSize: 20, color: '#D4A017', marginBottom: 8 }}>{newOrder.reference}</p>
               <p style={{ color: '#aaa', fontSize: 13, marginBottom: 4 }}>USDT: {Number(newOrder.amount_usdt).toFixed(2)}</p>
-              <p style={{ color: '#aaa', fontSize: 13, marginBottom: 20 }}>Pay to: {newOrder.pay_to}</p>
-              <button className="btn-gold" onClick={() => { setModal(null); setNewOrder(null); }}>Done</button>
+              <p style={{ color: '#aaa', fontSize: 13, marginBottom: 4 }}>Chain: {newOrder.sending_chain || 'trc20'}</p>
+              {newOrder.whatsapp_coach && (
+                <a href={newOrder.whatsapp_coach} target="_blank" rel="noreferrer" style={{ fontSize: 13, color: '#4CAF50' }}>
+                  Share on WhatsApp ↗
+                </a>
+              )}
+              <div style={{ marginTop: 20 }}>
+                <button className="btn-gold" onClick={() => { setModal(null); setNewOrder(null); }}>Done</button>
+              </div>
             </div>
           ) : (
             <form onSubmit={createOrder}>
@@ -185,19 +296,39 @@ export default function AdminPage() {
               {[
                 { label: 'Customer Name', key: 'customer_name', placeholder: 'John Mukisa' },
                 { label: 'WhatsApp', key: 'customer_whatsapp', placeholder: '+256700123456' },
-                { label: 'USDT Wallet (TRC20)', key: 'customer_wallet', placeholder: 'TXxxx...' },
-                { label: 'Amount UGX', key: 'amount_ugx', placeholder: '75,000,000' },
+                { label: 'USDT Wallet', key: 'customer_wallet', placeholder: 'TXxxx...' },
+                { label: 'Amount UGX', key: 'amount_ugx', placeholder: '75,000,000', required: true },
                 { label: 'Notes', key: 'notes', placeholder: 'Traveling to Yiwu June 1st' },
               ].map(f => (
                 <div key={f.key} style={{ marginBottom: 12 }}>
                   <label className="label" style={{ display: 'block', marginBottom: 6 }}>{f.label}</label>
-                  <input className="input" placeholder={f.placeholder} value={form[f.key]} onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))} />
+                  <input className="input" placeholder={f.placeholder} required={f.required} value={form[f.key]} onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))} />
                 </div>
               ))}
-              <div style={{ marginBottom: 16 }}>
+              <div style={{ marginBottom: 12 }}>
                 <label className="label" style={{ display: 'block', marginBottom: 6 }}>Corridor</label>
                 <select className="input" value={form.corridor_id} onChange={e => setForm(p => ({ ...p, corridor_id: e.target.value }))}>
-                  {Object.entries(CORRIDORS).map(([id, c]) => <option key={id} value={id}>{c.flag} {c.name}</option>)}
+                  {Object.entries(CORRIDORS).map(([id, c]) => (
+                    <option key={id} value={id}>{c.flag} {c.name} ({c.direction})</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <label className="label" style={{ display: 'block', marginBottom: 6 }}>Direction</label>
+                <select className="input" value={form.direction} onChange={e => setForm(p => ({ ...p, direction: e.target.value }))}>
+                  <option value="outbound">↑ Outbound (Uganda → abroad)</option>
+                  <option value="inbound">↓ Inbound (abroad → Uganda)</option>
+                </select>
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <label className="label" style={{ display: 'block', marginBottom: 6 }}>Sending Chain</label>
+                <select className="input" value={form.sending_chain} onChange={e => setForm(p => ({ ...p, sending_chain: e.target.value }))}>
+                  <option value="trc20">TRC20 (Tron) — $0.01 ⭐</option>
+                  <option value="bep20">BEP20 (BSC) — ~$0.05</option>
+                  <option value="polygon">Polygon — ~$0.01</option>
+                  <option value="solana">Solana — ~$0.001</option>
+                  <option value="erc20">ERC20 (Ethereum) — $3–15</option>
+                  <option value="base">Base (USDC) — ~$0.001</option>
                 </select>
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
@@ -214,8 +345,11 @@ export default function AdminPage() {
 
 function ModalOverlay({ children, onClose }) {
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }} onClick={onClose}>
-      <div className="card" style={{ padding: 32, maxWidth: 500, width: '100%', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+    <div
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+      onClick={onClose}
+    >
+      <div className="card" style={{ padding: 32, maxWidth: 520, width: '100%', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
         {children}
       </div>
     </div>

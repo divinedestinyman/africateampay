@@ -5,7 +5,6 @@ import { getRates } from '@/lib/rates';
 export const revalidate = 300; // revalidate every 5 minutes
 
 const WA = process.env.NEXT_PUBLIC_COACH_WHATSAPP || '256784277664';
-const MOMO = process.env.COACH_MOMO_NUMBER || 'MY_MOMO_NUMBER';
 
 export default async function HomePage() {
   let rates = null;
@@ -27,8 +26,8 @@ export default async function HomePage() {
               marginBottom: 12,
             }}
           >
-            SEND MONEY TO CHINA, UAE,<br />
-            <span style={{ color: '#D4A017' }}>UK & KENYA VIA USDT</span>
+            UGANDA'S USDT CORRIDOR NETWORK<br />
+            <span style={{ color: '#D4A017' }}>SEND & RECEIVE IN 15 COUNTRIES</span>
           </h1>
           <p
             style={{
@@ -39,15 +38,22 @@ export default async function HomePage() {
               marginBottom: 24,
             }}
           >
-            80% CHEAPER THAN YOUR BANK
+            80% CHEAPER THAN YOUR BANK — FLAT 1% FEE
           </p>
           <p style={{ color: '#999', fontSize: 16, lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}>
-            AfricaTeam's trusted USDT corridor network. Convert your UGX to USDT before you travel.
-            Pay suppliers in China. Send money home. Flat 1% fee. No hidden charges.
+            AfricaTeam's trusted USDT rails. Pay suppliers in China, India, Turkey &amp; beyond.
+            Diaspora in UK, UAE, USA &amp; Saudi? Send money home to Uganda instantly.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/calculate" className="btn-gold">Calculate Your Transfer →</Link>
-            <a href="#how-it-works" className="btn-outline">How It Works →</a>
+            <Link href="/calculate" className="btn-gold">Calculate My Transfer →</Link>
+            <a
+              href={`https://wa.me/${WA}`}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-outline"
+            >
+              WhatsApp Coach →
+            </a>
           </div>
           {rates && !rates.is_fallback && (
             <p style={{ color: '#444', fontSize: 12, marginTop: 20, fontFamily: 'var(--font-mono)' }}>
@@ -70,10 +76,11 @@ export default async function HomePage() {
           }}
         >
           {[
-            '✓ P2P desk live and operational',
+            '✓ Live USDT corridors — 15 countries',
             '✓ 50,000+ Africa Team community members',
             '✓ Every transaction confirmed via WhatsApp',
-            '✓ USDT on Tron network — $0.01 transfer fee',
+            '✓ TRC20 network — $0.01 transfer fee',
+            '✓ Flat 1% — no hidden charges',
           ].map(t => (
             <span key={t} style={{ fontSize: 13, color: '#666' }}>{t}</span>
           ))}
@@ -92,21 +99,63 @@ export default async function HomePage() {
               fontSize: 'clamp(32px, 5vw, 52px)',
               textAlign: 'center',
               letterSpacing: '0.03em',
-              marginBottom: 48,
+              marginBottom: 16,
             }}
           >
             WHERE ARE YOU SENDING?
           </h2>
+          <p style={{ textAlign: 'center', color: '#666', fontSize: 14, marginBottom: 48 }}>
+            Outbound (Uganda → world) and inbound (diaspora → Uganda) both supported
+          </p>
+
+          {/* Priority outbound corridors */}
+          <p style={{ color: '#444', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
+            Outbound — Uganda to the world
+          </p>
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
               gap: 20,
+              marginBottom: 40,
             }}
           >
             {['china', 'uae', 'uk', 'kenya'].map(id => (
               <CorridorCard key={id} corridorId={id} rate={rates?.usdt_ugx} />
             ))}
+          </div>
+
+          {/* Inbound banner */}
+          <div
+            style={{
+              background: 'rgba(212,160,23,0.06)',
+              border: '1px solid rgba(212,160,23,0.15)',
+              borderRadius: 12,
+              padding: '28px 32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: 20,
+            }}
+          >
+            <div>
+              <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.04em', marginBottom: 6 }}>
+                🌍 DIASPORA? SEND MONEY HOME TO UGANDA
+              </p>
+              <p style={{ color: '#888', fontSize: 14 }}>
+                USA · UAE · UK · Saudi Arabia · Canada · Australia · Germany · Qatar · Kenya
+              </p>
+            </div>
+            <a
+              href={`https://wa.me/${WA}?text=Hi+Coach,+I+want+to+send+money+to+Uganda+from+abroad`}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-gold"
+              style={{ whiteSpace: 'nowrap' }}
+            >
+              WhatsApp Coach →
+            </a>
           </div>
         </div>
       </section>
@@ -141,8 +190,8 @@ export default async function HomePage() {
               },
               {
                 step: '02',
-                title: 'Pay Coach',
-                body: `Send UGX via MTN MoMo, Airtel Money, or USDT. Coach number: ${MOMO}. Reference: your order number.`,
+                title: 'WhatsApp Coach',
+                body: 'Share your order reference on WhatsApp. Pay UGX via MTN MoMo or Airtel Money using your reference. Coach confirms receipt.',
               },
               {
                 step: '03',

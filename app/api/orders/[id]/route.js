@@ -17,26 +17,37 @@ export async function PATCH(request, { params }) {
   }
 
   const body = await request.json();
-  const { status, tron_tx_hash, amount_usdt } = body;
+  const { status, tron_tx_hash, blockchain_tx_hash, amount_usdt, notes } = body;
 
-  const allowed = ['payment_received', 'usdt_sent', 'completed', 'cancelled'];
-  if (status && !allowed.includes(status)) {
-    return Response.json({ error: 'Invalid status' }, { status: 400 });
+  const ALLOWED_STATUSES = [
+    'pending', 'rate_locked', 'payment_received', 'converting',
+    'sending', 'completed', 'failed', 'refunded', 'disputed',
+    'cancelled', 'usdt_sent',
+  ];
+  if (status && !ALLOWED_STATUSES.includes(status)) {
+    return Response.json({ error: `Invalid status. Allowed: ${ALLOWED_STATUSES.join(', ')}` }, { status: 400 });
   }
 
   const updates = {};
   if (status) updates.status = status;
-  if (tron_tx_hash) updates.tron_tx_hash = tron_tx_hash;
+
+  // Support both field names; blockchain_tx_hash is canonical, tron_tx_hash is legacy alias
+  const txHash = blockchain_tx_hash || tron_tx_hash;
+  if (txHash) {
+    updates.tron_tx_hash = txHash;
+    updates.blockchain_tx_hash = txHash;
+  }
   if (amount_usdt) updates.amount_usdt = parseFloat(amount_usdt);
+  if (notes !== undefined) updates.notes = notes;
 
   if (status === 'payment_received') updates.payment_confirmed_at = new Date().toISOString();
-  if (status === 'usdt_sent') updates.usdt_sent_at = new Date().toISOString();
+  if (status === 'usdt_sent' || status === 'completed') updates.usdt_sent_at = new Date().toISOString();
 
   const order = await updateOrder(params.id, updates);
   if (!order) return Response.json({ error: 'Order not found' }, { status: 404 });
 
-  // Notify when USDT is sent
-  if (status === 'usdt_sent' && tron_tx_hash) {
+  // Notify when USDT is sent or order is completed
+  if ((status === 'usdt_sent' || status === 'completed') && txHash) {
     notifyUsdtSent(order).catch(() => {});
   }
 
