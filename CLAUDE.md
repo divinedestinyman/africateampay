@@ -170,7 +170,7 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
   - ✅ `app/dispute/page.jsx` — Dispute form (48hr SLA, Telegram notification)
   - ✅ `app/api/disputes/route.js` — Dispute API (Telegram Coach notification)
   - ✅ Railway PostgreSQL schema applied (9 tables, confirmed)
-- 🔜 Session 5: Blockchain TX tracking + admin dispute workflow
+- 🔄 Session 5: Partial — see below
 - 🔜 Session 6: Supplier directory + PWA
 - 🔜 Session 7: Accounts + KYC + multilingual
 
@@ -187,24 +187,59 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
 | `/trade-calculator` | Fly vs. remote decision tool with break-even |
 | `/dispute` | Dispute form → Telegram Coach, 48hr SLA |
 
-## What Next Session Must Build (Session 5)
+## Session 5 — What Was Built (Partial)
 
-Read `AFRICATEAMPAY_ULTIMATE_BRIEF_v2.md` in full before writing any code.
+### ✅ Done
+- `lib/blockchain.js` — TronGrid TX checker (free, no key). `checkTxStatus(hash, chain)` returns confirmed status + confirmations count for TRC20; returns explorer link for other chains.
+- `app/api/tx-status/route.js` — `GET /api/tx-status?hash=...&chain=...` proxies blockchain status.
+- `lib/db.js` — added `updateDispute(id, updates)` and `createSupplier(data)`.
+- `lib/telegram.js` — added `sendDisputeResolved(dispute)`.
+- `app/api/disputes/[id]/route.js` — `PATCH` to update dispute status (auth: x-admin-token). Triggers Telegram on resolved/refunded.
+- `app/api/suppliers/route.js` — `GET /api/suppliers?country=&category=` and `POST /api/suppliers`.
+- `app/corridors/from-usa/page.jsx` — Inbound from USA with calculator.
+- `app/corridors/from-uk/page.jsx` — Inbound from UK (GBP) with calculator.
+- `app/corridors/from-uae/page.jsx` — Inbound from UAE (AED) with calculator.
+- `app/corridors/from-saudi/page.jsx` — Inbound from Saudi (SAR) with calculator.
+- `app/suppliers/page.jsx` — Supplier directory with country tabs, submit form.
+- `app/receipt/[reference]/page.jsx` — Server-rendered printable receipt (print-to-PDF via browser).
 
-### 1. Blockchain TX tracking
-- Admin inputs TX hash → app fetches confirmation from block explorer API
-- Show confirmations count + confirmed/pending status on `/track/[reference]`
-- Supported chains: TRC20 (tronscan), BEP20 (bscscan), Polygon, ERC20 (etherscan)
+### 🔴 Incomplete — Must Finish Next Session
 
-### 2. Admin dispute workflow
-- `/admin` dashboard: list open disputes, mark resolved/refunded
-- `PATCH /api/disputes/[id]` — update dispute status
-- Auto-Telegram when Coach marks a dispute resolved
+#### 1. TxStatusCard component (track page is broken without it)
+`app/track/[reference]/page.jsx` references `<TxStatusCard>` but the component was never written. The file has this placeholder where the old TX hash block was:
+```jsx
+{order.blockchain_tx_hash && (
+  <TxStatusCard hash={order.blockchain_tx_hash} chain={order.sending_chain || 'trc20'} reference={order.reference} />
+)}
+```
+Add `TxStatusCard` as a client component at the top of the file:
+- Polls `/api/tx-status?hash=...&chain=...` every 30s while `!confirmed`
+- Shows: TX hash (truncated), confirmations count (e.g. "14 confirmations"), confirmed ✅ / pending ⏳ badge
+- Explorer link with correct chain (tronscan / bscscan / polygonscan etc)
+- Download receipt button: `<a href={/receipt/${reference}}>Download Receipt</a>`
 
-### 3. Inbound corridor pages
-- `/corridors/inbound/usa` — USA diaspora sending to Uganda
-- `/corridors/inbound/uk` — UK diaspora
-- `/corridors/inbound/uae` — UAE/Gulf workers
+#### 2. Admin disputes tab
+`app/admin/page.jsx` needs a "Disputes" tab alongside the orders table:
+- Fetch `GET /api/disputes` with admin auth header (add this route — currently only `POST /api/disputes` and `PATCH /api/disputes/[id]` exist)
+- Show: reference, issue type, contact, expected vs received, status, created date
+- Action buttons: "Resolve", "Refund", "Need Info" — call `PATCH /api/disputes/[id]`
+- Filter by status: open / resolved / refunded
+- Need to add `GET /api/disputes/route.js` as well (returns all disputes with admin auth)
+
+#### 3. GET /api/disputes route (missing)
+Add `GET` handler to `app/api/disputes/route.js` (currently only has `POST`):
+```js
+export async function GET(request) {
+  const token = request.headers.get('x-admin-token');
+  if (!token || token !== process.env.ADMIN_TOKEN) return 401;
+  const { searchParams } = new URL(request.url);
+  const status = searchParams.get('status') || undefined;
+  const disputes = await getDisputes({ status });
+  return NextResponse.json({ disputes });
+}
+```
+
+## What Next Session Must Build (Session 5 Completion + Session 6)
 
 ## Hard Rules (Do Not Violate)
 

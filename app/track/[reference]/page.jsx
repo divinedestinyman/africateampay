@@ -348,34 +348,9 @@ export default function TrackReferencePage({ params }) {
             </div>
           )}
 
-          {/* TX hash (when completed) */}
+          {/* TX hash + confirmation status */}
           {order.blockchain_tx_hash && (
-            <div
-              className="card"
-              style={{ padding: 16, marginBottom: 24 }}
-            >
-              <p className="label" style={{ marginBottom: 8 }}>Transaction Hash</p>
-              <p
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 12,
-                  wordBreak: 'break-all',
-                  color: '#D4A017',
-                }}
-              >
-                {order.blockchain_tx_hash}
-              </p>
-              {(order.sending_chain === 'trc20' || !order.sending_chain) && (
-                <a
-                  href={`https://tronscan.org/#/transaction/${order.blockchain_tx_hash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ fontSize: 12, color: '#888', display: 'block', marginTop: 6 }}
-                >
-                  View on TronScan →
-                </a>
-              )}
-            </div>
+            <TxStatusCard hash={order.blockchain_tx_hash} chain={order.sending_chain || 'trc20'} reference={order.reference} />
           )}
 
           {/* Terminal state notice */}
