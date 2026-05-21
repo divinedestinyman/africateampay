@@ -1,4 +1,4 @@
-# AfricaTeamPay — CLAUDE.md (v2.0)
+# AfricaTeamPay — CLAUDE.md (v2.1)
 
 ## What This Is
 
@@ -28,6 +28,7 @@ lib/utils.js           — Reference gen, formatters, CORRIDORS (15), STATUS_LAB
 middleware.js          — Admin cookie auth (/admin/* routes)
 scripts/schema.sql     — PostgreSQL schema v2.0 (9 tables, run on Railway)
 app/api/rates/multi/   — Multi-currency fiat rates endpoint
+app/api/orders/        — Order creation (v2: inbound + outbound, rate lock, wallet)
 ```
 
 ## Environment Variables
@@ -49,6 +50,14 @@ app/api/rates/multi/   — Multi-currency fiat rates endpoint
 | `WALLET_ERC20` | USDT ERC20 wallet address |
 | `WALLET_SOLANA` | USDT Solana wallet address |
 | `WALLET_BASE` | USDC Base wallet address |
+
+## Railway DATABASE_URL
+
+```
+DATABASE_URL=postgresql://postgres:NqIvukCtlrYKklMxLshebmUTxpYItUnk@kodama.proxy.rlwy.net:49891/railway
+```
+
+Add to Vercel env vars. Then run `psql $DATABASE_URL -f scripts/schema.sql` to initialize.
 
 ## Database Setup (Railway)
 
@@ -74,10 +83,29 @@ Auth: cookie-based via middleware, set by `/api/admin/login`
 ## Order Status Flow
 
 ```
-pending → payment_received → converting → sending → completed
-       → cancelled                      → failed → refunded
-       → rate_locked                    → disputed → completed/refunded
+pending → rate_locked → payment_received → converting → sending → completed
+                     → cancelled          → failed → refunded
+                                          → disputed → completed/refunded
 ```
+
+## Key Architecture Decisions
+
+### `lib/db.js` — createOrder
+`createOrder(data)` now accepts `status` in the data object (defaults to `'pending'`).
+Orders from `/send` form are created with `status: 'rate_locked'` immediately.
+
+### `/api/orders` POST — v2 handler
+Handles both directions:
+- **Outbound**: `amount_ugx` + `corridor_id` → converts UGX→USDT, attaches supplier fields
+- **Inbound**: `sender_amount` + `sender_currency` → converts foreign→USD→USDT, attaches recipient fields
+
+Always returns `wallet_address` for the selected chain.
+Sets `rate_lock_expires_at = now + 30 minutes`.
+Status on creation: `rate_locked`.
+
+### Rate lock
+30-minute window from order creation. Stored as `rate_lock_expires_at` ISO timestamp.
+`usdt_rate` field stores the locked rate. Countdown shown on confirmation + track pages.
 
 ## Pages
 
@@ -89,7 +117,7 @@ pending → payment_received → converting → sending → completed
 | `/corridors/uk` | UK corridor |
 | `/corridors/kenya` | Kenya corridor |
 | `/calculate` | Universal calculator |
-| `/track` | Order tracking by reference |
+| `/track` | Order tracking by reference number |
 | `/admin` | Coach dashboard (password protected) |
 | `/admin/login` | Admin login page |
 
@@ -99,9 +127,9 @@ pending → payment_received → converting → sending → completed
 |-------|--------|-------------|
 | `/api/rates` | GET | Live USDT/UGX rate (CoinGecko, 10-min cached) |
 | `/api/rates/multi` | GET | Multi-currency fiat rates (open.er-api.com, 10-min cached) |
-| `/api/orders` | GET | List orders (`?status=`, `?ref=` filters) |
-| `/api/orders` | POST | Create new order (accepts all v2 fields) |
-| `/api/orders/[id]` | GET | Single order |
+| `/api/orders` | GET | List orders (`?status=`, `?ref=`, `?direction=` filters) |
+| `/api/orders` | POST | Create order — v2 (inbound + outbound, rate lock, wallet) |
+| `/api/orders/[id]` | GET | Single order by ID |
 | `/api/orders/[id]` | PATCH | Update status + blockchain_tx_hash (requires `x-admin-token`) |
 | `/api/admin/login` | POST | Set admin cookie |
 | `/api/admin/login` | DELETE | Clear admin cookie (logout) |
@@ -110,6 +138,7 @@ pending → payment_received → converting → sending → completed
 
 Background: `#0A0A0A` | Surface: `#111111` | Gold: `#D4A017`
 Fonts: Bebas Neue (headlines), Sora (body), JetBrains Mono (numbers)
+CSS classes: `.card`, `.card-gold`, `.btn-gold`, `.btn-outline`, `.input`, `.label`
 
 ## Deployment
 
@@ -122,12 +151,48 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
 ## Session Roadmap
 
 - ✅ Session 1: Bug fixes + v2 foundation (NaN fix, schema v2, 15 corridors, new admin)
-- 🔜 Session 2: /send self-service order form + rate lock + wallet display
+- 🔄 Session 2: /send self-service order form + rate lock + wallet display
+  - ✅ `lib/db.js` — createOrder accepts status field
+  - ✅ `app/api/orders/route.js` — full v2 rewrite (inbound/outbound, rate lock, wallet)
+  - ⏳ `lib/telegram.js` — upgrade notification for v2 order format
+  - ⏳ `app/send/page.jsx` — universal self-service order form (PRIORITY #1)
+  - ⏳ `app/track/[reference]/page.jsx` — dynamic track page with wallet + countdown
+  - ⏳ Fix `app/track/page.jsx` — placeholder `ACT-` → `ATP-`
 - 🔜 Session 3: /send-to-uganda hub + direction toggle homepage + multi-currency calculator
 - 🔜 Session 4: Outbound expansion (India, Turkey, Japan, Korea, Malaysia)
 - 🔜 Session 5: Blockchain tracking + dispute flow
 - 🔜 Session 6: Supplier directory + PWA
 - 🔜 Session 7: Accounts + KYC + multilingual
+
+## What Next Session Must Build (Session 2 continued)
+
+Read `AFRICATEAMPAY_ULTIMATE_BRIEF_v2.md` in full before writing any code.
+
+### 1. `lib/telegram.js` — upgrade `notifyNewOrder`
+Handle both directions. For inbound: show sender amount/currency, recipient MoMo/bank, chain. For outbound: show UGX, USDT, supplier details, chain. Always show wallet address Coach should be watching.
+
+### 2. `app/send/page.jsx` — universal self-service form (PRIORITY #1)
+Client component (`'use client'`). Two steps:
+- **Step 1 — Form**: direction toggle, amount fields, chain selector, recipient/supplier fields, contact info
+- **Step 2 — Confirmation**: reference, wallet address (copyable), amount to send, 30-min countdown, next steps
+
+On page load: fetch `/api/rates/multi` for client-side preview calculation.
+On submit: POST `/api/orders` → switch to confirmation screen.
+
+Key form fields per direction:
+- **Outbound**: amount_ugx (min 500k UGX), corridor_id, supplier_payment_method, sending_chain, supplier details
+- **Inbound**: sender_amount, sender_currency (30+ currencies), sending_chain, settlement_method, recipient details
+- **Both**: sender_name, sender_email (required), sender_whatsapp, sender_telegram, notes
+
+### 3. `app/track/[reference]/page.jsx` — NEW dynamic route
+Client component with 30-second auto-refresh polling. Shows:
+- Full order status timeline
+- Wallet address + amount to send (when status = rate_locked/pending)
+- Countdown timer to rate_lock_expires_at
+- Chain info and copy button for wallet address
+
+### 4. Fix `app/track/page.jsx`
+Change placeholder from `ACT-20260520-1234` to `ATP-20260520-1234`.
 
 ## Hard Rules (Do Not Violate)
 
