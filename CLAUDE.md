@@ -158,33 +158,53 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
   - ✅ `app/send/page.jsx` — universal self-service order form (direction toggle, live preview, confirmation screen)
   - ✅ `app/track/[reference]/page.jsx` — dynamic track page (30s poll, timeline, wallet + countdown)
   - ✅ Fix `app/track/page.jsx` — placeholder `ACT-` → `ATP-`
-- 🔜 Session 3: /send-to-uganda hub + direction toggle on homepage + multi-currency calculator
-- 🔜 Session 4: Outbound expansion (India, Turkey, Japan, Korea, Malaysia)
-- 🔜 Session 5: Blockchain tracking + dispute flow
+- ✅ Session 3: /send-to-uganda hub + direction toggle on homepage + multi-currency calculator
+- ✅ Session 4: Corridor expansion + trade tools + dispute flow
+  - ✅ `app/corridors/india/page.jsx` — India corridor (pharma, textiles, machinery, INR)
+  - ✅ `app/corridors/turkey/page.jsx` — Turkey corridor (Istanbul Laleli/Merter, TRY, USDT guide)
+  - ✅ `app/corridors/usa/page.jsx` — USA corridor (medical, tech, Amazon Business, USD wire)
+  - ✅ `app/corridors/germany/page.jsx` — Germany/EU corridor (industrial, IBAN, EUR wire)
+  - ✅ `app/corridors/japan/page.jsx` — Japan + South Korea combined (auctions, JPY/KRW)
+  - ✅ `app/corridors/[country]/page.jsx` — Dynamic fallback (29 known countries + generic)
+  - ✅ `app/trade-calculator/page.jsx` — Fly vs. remote decision tool (break-even calc)
+  - ✅ `app/dispute/page.jsx` — Dispute form (48hr SLA, Telegram notification)
+  - ✅ `app/api/disputes/route.js` — Dispute API (Telegram Coach notification)
+  - ✅ Railway PostgreSQL schema applied (9 tables, confirmed)
+- 🔜 Session 5: Blockchain TX tracking + admin dispute workflow
 - 🔜 Session 6: Supplier directory + PWA
 - 🔜 Session 7: Accounts + KYC + multilingual
 
-## What Next Session Must Build (Session 3)
+## Pages Added in Session 4
+
+| Route | Description |
+|-------|-------------|
+| `/corridors/india` | India corridor — pharma, textiles, INR T/T |
+| `/corridors/turkey` | Turkey corridor — Istanbul markets, USDT/TRY |
+| `/corridors/usa` | USA corridor — medical, tech, Amazon Business |
+| `/corridors/germany` | Germany/EU — industrial machinery, EUR wire |
+| `/corridors/japan` | Japan + South Korea — auctions, JPY/KRW |
+| `/corridors/[country]` | Dynamic fallback for any other country (50+) |
+| `/trade-calculator` | Fly vs. remote decision tool with break-even |
+| `/dispute` | Dispute form → Telegram Coach, 48hr SLA |
+
+## What Next Session Must Build (Session 5)
 
 Read `AFRICATEAMPAY_ULTIMATE_BRIEF_v2.md` in full before writing any code.
 
-### 1. `/send-to-uganda` hub page
-- Client component that defaults `direction = 'inbound'`
-- Can reuse `app/send/page.jsx` by passing `defaultDirection="inbound"` prop, or duplicate with inbound-first layout
-- SEO-friendly for diaspora searching "send money to Uganda from USA/UK/UAE" etc.
+### 1. Blockchain TX tracking
+- Admin inputs TX hash → app fetches confirmation from block explorer API
+- Show confirmations count + confirmed/pending status on `/track/[reference]`
+- Supported chains: TRC20 (tronscan), BEP20 (bscscan), Polygon, ERC20 (etherscan)
 
-### 2. Homepage direction toggle
-- Add inbound CTA section to `app/page.jsx` — "Receiving money FROM abroad?" with link to `/send-to-uganda`
-- The current homepage shows outbound corridor cards only
+### 2. Admin dispute workflow
+- `/admin` dashboard: list open disputes, mark resolved/refunded
+- `PATCH /api/disputes/[id]` — update dispute status
+- Auto-Telegram when Coach marks a dispute resolved
 
-### 3. Multi-currency calculator upgrade
-- `app/calculate/page.jsx` should support both outbound (UGX → destination) and inbound (source currency → UGX)
-- Reuse `/api/rates/multi` with dropdown for currency selection
-
-### 4. `components/OrderStatus.jsx` upgrade
-- Current component uses old v1 statuses (pending → payment_received → usdt_sent → completed)
-- Needs to support v2 statuses: rate_locked → payment_received → converting → sending → completed
-- The `/track` page (not `/track/[reference]`) uses this component — update it for v2
+### 3. Inbound corridor pages
+- `/corridors/inbound/usa` — USA diaspora sending to Uganda
+- `/corridors/inbound/uk` — UK diaspora
+- `/corridors/inbound/uae` — UAE/Gulf workers
 
 ## Hard Rules (Do Not Violate)
 
