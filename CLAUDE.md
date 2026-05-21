@@ -151,48 +151,40 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
 ## Session Roadmap
 
 - ✅ Session 1: Bug fixes + v2 foundation (NaN fix, schema v2, 15 corridors, new admin)
-- 🔄 Session 2: /send self-service order form + rate lock + wallet display
+- ✅ Session 2: /send self-service order form + rate lock + wallet display
   - ✅ `lib/db.js` — createOrder accepts status field
   - ✅ `app/api/orders/route.js` — full v2 rewrite (inbound/outbound, rate lock, wallet)
-  - ⏳ `lib/telegram.js` — upgrade notification for v2 order format
-  - ⏳ `app/send/page.jsx` — universal self-service order form (PRIORITY #1)
-  - ⏳ `app/track/[reference]/page.jsx` — dynamic track page with wallet + countdown
-  - ⏳ Fix `app/track/page.jsx` — placeholder `ACT-` → `ATP-`
-- 🔜 Session 3: /send-to-uganda hub + direction toggle homepage + multi-currency calculator
+  - ✅ `lib/telegram.js` — upgraded for v2 inbound + outbound notification format
+  - ✅ `app/send/page.jsx` — universal self-service order form (direction toggle, live preview, confirmation screen)
+  - ✅ `app/track/[reference]/page.jsx` — dynamic track page (30s poll, timeline, wallet + countdown)
+  - ✅ Fix `app/track/page.jsx` — placeholder `ACT-` → `ATP-`
+- 🔜 Session 3: /send-to-uganda hub + direction toggle on homepage + multi-currency calculator
 - 🔜 Session 4: Outbound expansion (India, Turkey, Japan, Korea, Malaysia)
 - 🔜 Session 5: Blockchain tracking + dispute flow
 - 🔜 Session 6: Supplier directory + PWA
 - 🔜 Session 7: Accounts + KYC + multilingual
 
-## What Next Session Must Build (Session 2 continued)
+## What Next Session Must Build (Session 3)
 
 Read `AFRICATEAMPAY_ULTIMATE_BRIEF_v2.md` in full before writing any code.
 
-### 1. `lib/telegram.js` — upgrade `notifyNewOrder`
-Handle both directions. For inbound: show sender amount/currency, recipient MoMo/bank, chain. For outbound: show UGX, USDT, supplier details, chain. Always show wallet address Coach should be watching.
+### 1. `/send-to-uganda` hub page
+- Client component that defaults `direction = 'inbound'`
+- Can reuse `app/send/page.jsx` by passing `defaultDirection="inbound"` prop, or duplicate with inbound-first layout
+- SEO-friendly for diaspora searching "send money to Uganda from USA/UK/UAE" etc.
 
-### 2. `app/send/page.jsx` — universal self-service form (PRIORITY #1)
-Client component (`'use client'`). Two steps:
-- **Step 1 — Form**: direction toggle, amount fields, chain selector, recipient/supplier fields, contact info
-- **Step 2 — Confirmation**: reference, wallet address (copyable), amount to send, 30-min countdown, next steps
+### 2. Homepage direction toggle
+- Add inbound CTA section to `app/page.jsx` — "Receiving money FROM abroad?" with link to `/send-to-uganda`
+- The current homepage shows outbound corridor cards only
 
-On page load: fetch `/api/rates/multi` for client-side preview calculation.
-On submit: POST `/api/orders` → switch to confirmation screen.
+### 3. Multi-currency calculator upgrade
+- `app/calculate/page.jsx` should support both outbound (UGX → destination) and inbound (source currency → UGX)
+- Reuse `/api/rates/multi` with dropdown for currency selection
 
-Key form fields per direction:
-- **Outbound**: amount_ugx (min 500k UGX), corridor_id, supplier_payment_method, sending_chain, supplier details
-- **Inbound**: sender_amount, sender_currency (30+ currencies), sending_chain, settlement_method, recipient details
-- **Both**: sender_name, sender_email (required), sender_whatsapp, sender_telegram, notes
-
-### 3. `app/track/[reference]/page.jsx` — NEW dynamic route
-Client component with 30-second auto-refresh polling. Shows:
-- Full order status timeline
-- Wallet address + amount to send (when status = rate_locked/pending)
-- Countdown timer to rate_lock_expires_at
-- Chain info and copy button for wallet address
-
-### 4. Fix `app/track/page.jsx`
-Change placeholder from `ACT-20260520-1234` to `ATP-20260520-1234`.
+### 4. `components/OrderStatus.jsx` upgrade
+- Current component uses old v1 statuses (pending → payment_received → usdt_sent → completed)
+- Needs to support v2 statuses: rate_locked → payment_received → converting → sending → completed
+- The `/track` page (not `/track/[reference]`) uses this component — update it for v2
 
 ## Hard Rules (Do Not Violate)
 
