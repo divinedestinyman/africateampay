@@ -244,6 +244,9 @@ All Vercel deployments from Sessions 4–8 were failing due to these 3 errors:
 3. `app/page.jsx` — same unescaped apostrophe in description string. Fix: changed to double quotes.
 After these fixes, `npm run build` succeeds: ✓ Compiled successfully, ✓ 47/47 static pages.
 
+### ✅ Deployment Fix (commit 13caf82)
+Vercel Hobby plan blocks sub-daily crons. `vercel.json` had `*/2 * * * *` for the blockchain monitor (every 2 min) — this caused ALL deployments from Sessions 6–8 to fail at deploy time even though the build succeeded locally. Fix: changed to `0 0 * * *` (daily midnight UTC). First successful Vercel production deployment since Session 3 confirmed live.
+
 ## What Next Session Must Build (Session 9)
 
 ### Priority 1 — PDF Receipt Auto-Generation
