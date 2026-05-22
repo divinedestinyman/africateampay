@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/blockchain/monitor",
-      "schedule": "*/2 * * * *"
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/cron/reminders",
