@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "track": "Suivre",
+    "calculate": "Calculer →",
+    "account": "Mon Compte",
+    "lang_en": "EN",
+    "lang_fr": "FR",
+    "logout": "Déconnexion",
+    "sign_in": "Connexion"
+  },
+  "home": {
+    "badge": "Réseau USDT de l'Ouganda",
+    "heading1": "RÉSEAU DE TRANSFERT USDT OUGANDA",
+    "heading2": "ENVOYEZ DANS 15 PAYS",
+    "tagline": "80% MOINS CHER QUE VOTRE BANQUE — COMMISSION FIXE 1%",
+    "body": "Les rails USDT de confiance d'AfricaTeam. Payez vos fournisseurs en Chine, Inde, Turquie et ailleurs. Diaspora en UK, UAE, USA ? Envoyez de l'argent en Ouganda instantanément.",
+    "cta_supplier": "Payer Votre Fournisseur →",
+    "cta_send_home": "Envoyer de l'Argent →",
+    "live_rate": "Taux en direct : 1 USDT = UGX {rate}",
+    "section_where_badge": "Choisissez Votre Corridor",
+    "section_where": "OÙ ENVOYEZ-VOUS ?",
+    "section_where_body": "Sortant (Ouganda → monde) et entrant (diaspora → Ouganda) tous deux supportés",
+    "outbound_label": "Sortant — Ouganda vers le monde",
+    "diaspora_title": "DIASPORA ? ENVOYEZ DE L'ARGENT EN OUGANDA",
+    "diaspora_countries": "USA · UAE · UK · Arabie Saoudite · Canada · Australie · Allemagne · Qatar · Kenya",
+    "send_home_cta": "Envoyer de l'Argent →",
+    "how_badge": "Processus simple",
+    "how_title": "COMMENT ÇA MARCHE",
+    "step1_num": "01",
+    "step1_title": "Calculer",
+    "step1_body": "Entrez combien vous voulez envoyer. Voyez exactement ce que votre destinataire reçoit. Pas de frais cachés. Pas de surprises.",
+    "step2_num": "02",
+    "step2_title": "WhatsApp Coach",
+    "step2_body": "Partagez votre référence sur WhatsApp. Payez en UGX via MTN MoMo ou Airtel Money. Le Coach confirme la réception.",
+    "step3_num": "03",
+    "step3_title": "USDT Livré",
+    "step3_body": "Le Coach envoie les USDT dans votre portefeuille en 1 heure. Dépensez-les, transférez-les, ou convertissez-les. Confirmation WhatsApp des deux côtés.",
+    "cta_badge": "Prêt à commencer ?",
+    "cta_title": "VOTRE ARGENT DEVRAIT TRAVAILLER",
+    "cta_title_gold": "PLUS DUR",
+    "cta_btn1": "Calculer Mon Transfert →",
+    "cta_btn2": "WhatsApp Coach"
+  },
+  "send_uganda": {
+    "badge": "Diaspora → Ouganda",
+    "heading": "ENVOYEZ DE L'ARGENT EN",
+    "heading_ug": "OUGANDA",
+    "body": "Vous envoyez de n'importe où dans le monde. Votre famille en Ouganda reçoit sur MTN MoMo ou Airtel Money en 1 heure — sans compte bancaire nécessaire."
+  },
+  "buy_usdt": {
+    "badge": "Pour Commencer",
+    "heading": "COMMENT ACHETER ET ENVOYER DE L'USDT",
+    "body": "Nouveau en crypto ? Ce guide vous amène de zéro à envoyer des USDT en 10 minutes."
+  }
+}

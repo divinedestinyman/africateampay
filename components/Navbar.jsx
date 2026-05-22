@@ -1,7 +1,39 @@
 'use client';
 import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar() {
+  const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => { if (data?.user) setUser(data.user); })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'DELETE' });
+    setUser(null);
+    setShowDropdown(false);
+    window.location.href = '/';
+  }
+
+  const initial = user?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || '?';
+
   return (
     <nav
       style={{
@@ -45,10 +77,93 @@ export default function Navbar() {
           <NavLink href="/corridors/uk">UK</NavLink>
           <NavLink href="/corridors/kenya">Kenya</NavLink>
           <NavLink href="/track">Track</NavLink>
+
+          <LanguageSwitcher />
+
+          {/* Account */}
+          {user ? (
+            <div ref={dropdownRef} style={{ position: 'relative' }}>
+              <button
+                onClick={() => setShowDropdown(v => !v)}
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: '50%',
+                  background: 'rgba(212,160,23,0.15)',
+                  border: '1px solid rgba(212,160,23,0.4)',
+                  color: '#D4A017',
+                  fontFamily: 'var(--font-bebas)',
+                  fontSize: 16,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginLeft: 4,
+                }}
+                title={user.email}
+              >
+                {initial}
+              </button>
+              {showDropdown && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 42,
+                    background: '#1a1a1a',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: 8,
+                    padding: '8px 0',
+                    minWidth: 160,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                    zIndex: 200,
+                  }}
+                >
+                  <p style={{ padding: '6px 16px', fontSize: 11, color: '#555', fontFamily: 'var(--font-sora)' }}>
+                    {user.email}
+                  </p>
+                  <Link
+                    href="/account/dashboard"
+                    onClick={() => setShowDropdown(false)}
+                    style={{
+                      display: 'block',
+                      padding: '8px 16px',
+                      color: '#ccc',
+                      textDecoration: 'none',
+                      fontSize: 13,
+                      fontFamily: 'var(--font-sora)',
+                    }}
+                  >
+                    My Account
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '8px 16px',
+                      color: '#888',
+                      background: 'none',
+                      border: 'none',
+                      fontSize: 13,
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-sora)',
+                    }}
+                  >
+                    Log out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <NavLink href="/account/login">Sign In</NavLink>
+          )}
+
           <Link
             href="/calculate"
             className="btn-gold"
-            style={{ padding: '9px 20px', fontSize: 14 }}
+            style={{ padding: '9px 20px', fontSize: 14, marginLeft: 4 }}
           >
             Calculate →
           </Link>

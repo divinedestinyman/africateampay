@@ -1,14 +1,18 @@
 import SendForm from '@/components/SendForm';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 export const metadata = {
-  title: 'Send Money to Uganda | AfricaTeamPay',
+  title: 'Send Money Home to Uganda from USA UK UAE Saudi | AfricaTeamPay',
   description:
-    'Send money home to Uganda from USA, UK, UAE, Saudi Arabia, Canada & Australia. Family receives MTN MoMo, Airtel Money, or bank transfer. Flat 1% fee, USDT-powered.',
+    'Send money home to Uganda from USA, UK, UAE, Saudi Arabia, Canada & Australia. Family receives MTN MoMo or Airtel Money within 1 hour. Flat 1% fee, USDT-powered.',
   openGraph: {
     title: 'Send Money to Uganda | AfricaTeamPay',
-    description: 'Diaspora-to-Uganda transfers. MTN MoMo, Airtel, bank wire. Flat 1% fee.',
+    description: 'Diaspora-to-Uganda transfers. MTN MoMo, Airtel Money. Flat 1% fee.',
+    url: 'https://africateampay.vercel.app/send-to-uganda',
+    siteName: 'AfricaTeamPay',
   },
+  alternates: { canonical: 'https://africateampay.vercel.app/send-to-uganda' },
 };
 
 const DIASPORA_COUNTRIES = [

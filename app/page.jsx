@@ -1,12 +1,28 @@
 import Link from 'next/link';
 import CorridorCard from '@/components/CorridorCard';
 import { getRates } from '@/lib/rates';
+import { getTranslations } from 'next-intl/server';
 
-export const revalidate = 300; // revalidate every 5 minutes
+export const revalidate = 300;
 
 const WA = process.env.NEXT_PUBLIC_COACH_WHATSAPP || '256784277664';
 
+export const metadata = {
+  title: 'Send Money to Uganda | AfricaTeamPay — 1% Flat Fee',
+  description:
+    'Uganda's USDT Corridor Network. Pay suppliers in China, India, Turkey & UAE. Diaspora? Send money home to Uganda instantly. Flat 1% fee — 80% cheaper than your bank.',
+  openGraph: {
+    title: 'Send Money to Uganda | AfricaTeamPay — 1% Flat Fee',
+    description: '80% cheaper than your bank. Flat 1% fee. 15 countries.',
+    url: 'https://africateampay.vercel.app',
+    siteName: 'AfricaTeamPay',
+    type: 'website',
+  },
+  alternates: { canonical: 'https://africateampay.vercel.app' },
+};
+
 export default async function HomePage() {
+  const t = await getTranslations('home');
   let rates = null;
   try { rates = await getRates(); } catch {}
 
@@ -16,7 +32,7 @@ export default async function HomePage() {
       <section style={{ position: 'relative', overflow: 'hidden', padding: '80px 24px 60px' }}>
         <div className="hero-glow" />
         <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', textAlign: 'center' }}>
-          <p className="label" style={{ marginBottom: 20 }}>Uganda's USDT Corridor Network</p>
+          <p className="label" style={{ marginBottom: 20 }}>{t('badge')}</p>
           <h1
             style={{
               fontFamily: 'var(--font-bebas)',
@@ -26,8 +42,8 @@ export default async function HomePage() {
               marginBottom: 12,
             }}
           >
-            UGANDA'S USDT CORRIDOR NETWORK<br />
-            <span style={{ color: '#D4A017' }}>SEND & RECEIVE IN 15 COUNTRIES</span>
+            {t('heading1')}<br />
+            <span style={{ color: '#D4A017' }}>{t('heading2')}</span>
           </h1>
           <p
             style={{
@@ -38,19 +54,18 @@ export default async function HomePage() {
               marginBottom: 24,
             }}
           >
-            80% CHEAPER THAN YOUR BANK — FLAT 1% FEE
+            {t('tagline')}
           </p>
           <p style={{ color: '#999', fontSize: 16, lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}>
-            AfricaTeam's trusted USDT rails. Pay suppliers in China, India, Turkey &amp; beyond.
-            Diaspora in UK, UAE, USA &amp; Saudi? Send money home to Uganda instantly.
+            {t('body')}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/pay-supplier" className="btn-gold">Pay Your Supplier →</Link>
-            <Link href="/send-to-uganda" className="btn-outline">Send Money Home →</Link>
+            <Link href="/pay-supplier" className="btn-gold">{t('cta_supplier')}</Link>
+            <Link href="/send-to-uganda" className="btn-outline">{t('cta_send_home')}</Link>
           </div>
           {rates && !rates.is_fallback && (
             <p style={{ color: '#444', fontSize: 12, marginTop: 20, fontFamily: 'var(--font-mono)' }}>
-              Live rate: 1 USDT = UGX {Number(rates.usdt_ugx).toLocaleString()}
+              {t('live_rate', { rate: Number(rates.usdt_ugx).toLocaleString() })}
             </p>
           )}
         </div>
@@ -74,8 +89,8 @@ export default async function HomePage() {
             '✓ Every transaction confirmed via WhatsApp',
             '✓ TRC20 network — $0.01 transfer fee',
             '✓ Flat 1% — no hidden charges',
-          ].map(t => (
-            <span key={t} style={{ fontSize: 13, color: '#666' }}>{t}</span>
+          ].map(trust => (
+            <span key={trust} style={{ fontSize: 13, color: '#666' }}>{trust}</span>
           ))}
         </div>
       </section>
@@ -85,7 +100,7 @@ export default async function HomePage() {
       {/* ── Corridor cards ───────────────────────────────────────────── */}
       <section style={{ padding: '64px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <p className="label" style={{ textAlign: 'center', marginBottom: 12 }}>Choose Your Corridor</p>
+          <p className="label" style={{ textAlign: 'center', marginBottom: 12 }}>{t('section_where_badge')}</p>
           <h2
             style={{
               fontFamily: 'var(--font-bebas)',
@@ -95,15 +110,14 @@ export default async function HomePage() {
               marginBottom: 16,
             }}
           >
-            WHERE ARE YOU SENDING?
+            {t('section_where')}
           </h2>
           <p style={{ textAlign: 'center', color: '#666', fontSize: 14, marginBottom: 48 }}>
-            Outbound (Uganda → world) and inbound (diaspora → Uganda) both supported
+            {t('section_where_body')}
           </p>
 
-          {/* Priority outbound corridors */}
           <p style={{ color: '#444', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
-            Outbound — Uganda to the world
+            {t('outbound_label')}
           </p>
           <div
             style={{
@@ -134,14 +148,12 @@ export default async function HomePage() {
           >
             <div>
               <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.04em', marginBottom: 6 }}>
-                🌍 DIASPORA? SEND MONEY HOME TO UGANDA
+                🌍 {t('diaspora_title')}
               </p>
-              <p style={{ color: '#888', fontSize: 14 }}>
-                USA · UAE · UK · Saudi Arabia · Canada · Australia · Germany · Qatar · Kenya
-              </p>
+              <p style={{ color: '#888', fontSize: 14 }}>{t('diaspora_countries')}</p>
             </div>
             <Link href="/send-to-uganda" className="btn-gold" style={{ whiteSpace: 'nowrap' }}>
-              Send Money Home →
+              {t('send_home_cta')}
             </Link>
           </div>
         </div>
@@ -150,7 +162,7 @@ export default async function HomePage() {
       {/* ── How it works ─────────────────────────────────────────────── */}
       <section id="how-it-works" style={{ padding: '64px 24px', background: 'rgba(17,17,17,0.6)' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <p className="label" style={{ textAlign: 'center', marginBottom: 12 }}>Simple process</p>
+          <p className="label" style={{ textAlign: 'center', marginBottom: 12 }}>{t('how_badge')}</p>
           <h2
             style={{
               fontFamily: 'var(--font-bebas)',
@@ -160,52 +172,19 @@ export default async function HomePage() {
               marginBottom: 48,
             }}
           >
-            HOW IT WORKS
+            {t('how_title')}
           </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: 24,
-            }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
             {[
-              {
-                step: '01',
-                title: 'Calculate',
-                body: 'Enter how much you want to send. See exactly what your recipient gets. No hidden fees. No surprises.',
-              },
-              {
-                step: '02',
-                title: 'WhatsApp Coach',
-                body: 'Share your order reference on WhatsApp. Pay UGX via MTN MoMo or Airtel Money using your reference. Coach confirms receipt.',
-              },
-              {
-                step: '03',
-                title: 'USDT Delivered',
-                body: 'Coach sends USDT to your wallet within 1 hour. You spend it, send it, or convert it. WhatsApp confirmation both sides.',
-              },
+              { num: t('step1_num'), title: t('step1_title'), body: t('step1_body') },
+              { num: t('step2_num'), title: t('step2_title'), body: t('step2_body') },
+              { num: t('step3_num'), title: t('step3_title'), body: t('step3_body') },
             ].map(s => (
-              <div key={s.step} className="card" style={{ padding: 28 }}>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-bebas)',
-                    fontSize: 48,
-                    color: 'rgba(212,160,23,0.25)',
-                    lineHeight: 1,
-                    marginBottom: 12,
-                  }}
-                >
-                  {s.step}
+              <div key={s.num} className="card" style={{ padding: 28 }}>
+                <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 48, color: 'rgba(212,160,23,0.25)', lineHeight: 1, marginBottom: 12 }}>
+                  {s.num}
                 </p>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-bebas)',
-                    fontSize: 24,
-                    letterSpacing: '0.04em',
-                    marginBottom: 10,
-                  }}
-                >
+                <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 24, letterSpacing: '0.04em', marginBottom: 10 }}>
                   {s.title}
                 </p>
                 <p style={{ color: '#888', fontSize: 14, lineHeight: 1.7 }}>{s.body}</p>
@@ -217,7 +196,7 @@ export default async function HomePage() {
 
       {/* ── Final CTA ────────────────────────────────────────────────── */}
       <section style={{ padding: '64px 24px', textAlign: 'center' }}>
-        <p className="label" style={{ marginBottom: 16 }}>Ready to start?</p>
+        <p className="label" style={{ marginBottom: 16 }}>{t('cta_badge')}</p>
         <h2
           style={{
             fontFamily: 'var(--font-bebas)',
@@ -226,17 +205,12 @@ export default async function HomePage() {
             marginBottom: 24,
           }}
         >
-          YOUR MONEY SHOULD WORK <span style={{ color: '#D4A017' }}>HARDER</span>
+          {t('cta_title')} <span style={{ color: '#D4A017' }}>{t('cta_title_gold')}</span>
         </h2>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/calculate" className="btn-gold">Calculate My Transfer →</Link>
-          <a
-            href={`https://wa.me/${WA}`}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-outline"
-          >
-            WhatsApp Coach
+          <Link href="/calculate" className="btn-gold">{t('cta_btn1')}</Link>
+          <a href={`https://wa.me/${WA}`} target="_blank" rel="noreferrer" className="btn-outline">
+            {t('cta_btn2')}
           </a>
         </div>
       </section>
