@@ -650,7 +650,7 @@ export default function TrackReferencePage({ params }) {
           {showSaveModal && <SaveTemplateModal order={order} onClose={() => setShowSaveModal(false)} />}
 
           {/* CTA buttons */}
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
             {process.env.NEXT_PUBLIC_COACH_WHATSAPP && (
               <a
                 href={`https://wa.me/${process.env.NEXT_PUBLIC_COACH_WHATSAPP}?text=Hi Coach, my order ref is ${order.reference}`}
@@ -669,6 +669,30 @@ export default function TrackReferencePage({ params }) {
               + Save Template
             </button>
           </div>
+
+          {/* WhatsApp share — viral referral mechanic */}
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(`I just sent money home via AfricaTeamPay. Reference: ${order.reference}. Track it: africateampay.vercel.app/track/${order.reference}`)}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '11px 16px',
+              borderRadius: 8,
+              background: 'rgba(37,211,102,0.08)',
+              border: '1px solid rgba(37,211,102,0.25)',
+              color: '#25D366',
+              textDecoration: 'none',
+              fontSize: 14,
+              marginBottom: 16,
+            }}
+          >
+            <span>📲</span>
+            Share receipt on WhatsApp
+          </a>
 
           <p style={{ fontSize: 12, color: '#444', textAlign: 'center' }}>
             Created {formatDate(order.created_at)}

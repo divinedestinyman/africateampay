@@ -2,6 +2,7 @@ import { Bebas_Neue, Sora, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import PWARegister from '@/components/PWARegister';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
@@ -49,11 +50,15 @@ export default async function RootLayout({ children }) {
       lang={locale}
       className={`${bebasNeue.variable} ${sora.variable} ${jetbrainsMono.variable}`}
     >
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Navbar />
           <main>{children}</main>
           <Footer />
+          <PWARegister />
         </NextIntlClientProvider>
       </body>
     </html>

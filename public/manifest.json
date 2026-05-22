@@ -1,0 +1,37 @@
+{
+  "name": "AfricaTeamPay",
+  "short_name": "ATP",
+  "description": "Uganda USDT Corridor Network — Pay suppliers & send money home. Flat 1% fee.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#D4A017",
+  "orientation": "portrait-primary",
+  "categories": ["finance"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Track Order",
+      "url": "/track",
+      "description": "Track your transfer by reference number"
+    },
+    {
+      "name": "Calculate",
+      "url": "/calculate",
+      "description": "Calculate transfer rates"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# AfricaTeamPay — CLAUDE.md (v2.1)
+# AfricaTeamPay — CLAUDE.md (v2.2)
 
 ## What This Is
 
@@ -247,33 +247,47 @@ After these fixes, `npm run build` succeeds: ✓ Compiled successfully, ✓ 47/4
 ### ✅ Deployment Fix (commit 13caf82)
 Vercel Hobby plan blocks sub-daily crons. `vercel.json` had `*/2 * * * *` for the blockchain monitor (every 2 min) — this caused ALL deployments from Sessions 6–8 to fail at deploy time even though the build succeeded locally. Fix: changed to `0 0 * * *` (daily midnight UTC). First successful Vercel production deployment since Session 3 confirmed live.
 
-## What Next Session Must Build (Session 9)
+## Session 9 — What Was Built
+
+### ✅ Done
+- `public/manifest.json` — PWA manifest (name, short_name, icons, start_url, display: standalone, shortcuts for /track + /calculate)
+- `public/icons/icon.svg` — SVG app icon: dark rounded rect bg, gold "AT" + "PAY" text, purpose: any
+- `public/icons/icon-maskable.svg` — Full-bleed SVG for maskable safe zone, same design
+- `public/sw.js` — Service worker: caches /track + /, returns /track on offline navigate requests
+- `components/PWARegister.jsx` — Client component that registers /sw.js on mount
+- `app/layout.jsx` — Added `<head><link rel="manifest" href="/manifest.json" /></head>` + `<PWARegister />` in body
+- `app/track/[reference]/page.jsx` — WhatsApp share button (wa.me/?text=) with pre-filled reference + tracking URL (viral referral mechanic)
+
+### Environment Variables Added (Session 9)
+None required for Session 9 features.
+
+## What Next Session Must Build (Session 10)
 
 ### Priority 1 — PDF Receipt Auto-Generation
-When admin marks an order `completed`, auto-generate a PDF receipt and optionally email it.
-- Use `app/receipt/[reference]/page.jsx` as the HTML template (already built)
-- Add a `GET /api/receipt/[reference]/pdf` route that returns a PDF using a server-side headless approach
-- Options: Puppeteer (full browser, larger cold start) or `@react-pdf/renderer` (lighter, no browser needed)
-- Store `receipt_pdf_url` in the orders table when generated
-- Add "Email Receipt" button in admin Send USDT modal
+When admin marks an order `completed`, auto-generate a PDF receipt.
+- `@react-pdf/renderer` already installed (`npm install @react-pdf/renderer` done in Session 9)
+- **`next.config.js`**: add `serverExternalPackages: ['@react-pdf/renderer']` to next config
+- **`components/ReceiptDocument.jsx`**: React-PDF Document with order details (reference, amount, rate, status, date, chain, wallet)
+- **`app/api/receipt/[reference]/pdf/route.js`**: GET route that renders PDF buffer, responds with `Content-Type: application/pdf`, `Content-Disposition: attachment; filename=receipt-{ref}.pdf`
+- **`app/track/[reference]/page.jsx`**: change "Download Receipt" button href from `/receipt/${reference}` to `/api/receipt/${reference}/pdf`
+- Optional: "Email Receipt" mailto button in admin Send USDT modal
 
-### Priority 2 — PWA (Progressive Web App)
-Make the site installable on mobile for repeat customers.
-- Add `app/manifest.json` with name, short_name, icons, theme_color (#0A0A0A), background_color, display: standalone
-- Add `<link rel="manifest">` to `app/layout.jsx`
-- Add service worker for offline page (just the track page skeleton)
-- Add 192×192 and 512×512 icons (gold ATP logo on dark background)
+### Priority 2 — Supplier Directory Enhancements
+- **`app/api/suppliers/[id]/route.js`**: GET supplier by ID (directory `app/api/suppliers/[id]/` already created)
+- **`app/api/suppliers/[id]/review/route.js`**: POST review — update running average (formula: `new_avg = (old_avg * count + new_rating) / (count + 1)`)
+- **`lib/db.js`**: add `getSupplierById(id)`, `addSupplierReview(id, rating, review_text)` — updates `community_rating` + `review_count`
+- **`app/suppliers/page.jsx`**: add clickable ★/☆ star rating widget, submit rating via modal
 
-### Priority 3 — Supplier Directory Enhancements
-- Add supplier verification badge (Coach-verified vs community-submitted)
-- Add rating/review system (1–5 stars, text review)
-- Add `GET /api/suppliers/[id]` route for individual supplier page
-- Create `app/suppliers/[id]/page.jsx` — full supplier profile with contact methods
+### Priority 3 — Arabic Translation + RTL
+- **`messages/ar.json`**: all keys matching en.json structure, Arabic text, RTL-appropriate
+- **`i18n/request.js`**: add `'ar'` to valid locales check (currently only checks 'en'/'fr')
+- **`components/LanguageSwitcher.jsx`**: add AR button with 🇸🇦 flag
+- **`app/layout.jsx`**: add `dir={locale === 'ar' ? 'rtl' : 'ltr'}` to `<html>` element
 
 ### Priority 4 — Homepage Inbound Calculator
-- Add a live calculator widget to the homepage inbound banner section
-- Let diaspora visitors type their country + amount and see UGX equivalent live
-- Reuse the `/api/rates/multi` endpoint already in place
+- Add live calculator widget to homepage inbound banner section
+- Let diaspora visitors type country + amount → see UGX equivalent live
+- Reuse `/api/rates/multi` endpoint already in place
 
 ## Hard Rules (Do Not Violate)
 
