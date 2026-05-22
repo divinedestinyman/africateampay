@@ -320,109 +320,25 @@ None required for Session 9 features.
 - ⚠️ EMAIL_USER + EMAIL_PASS — must be set in Vercel env vars for email receipts (Session 11 feature)
 - ⚠️ CRON_SECRET — set in Vercel env vars for blockchain monitor endpoint security
 
-## P2P Integration — Session 13 (IN PROGRESS)
+## P2P Integration — Session 13 (COMPLETE ✅)
 
 ### Context
 Africa Team P2P desk URL: `https://africateam-hub.vercel.app/p2p`
 Goal: full loop — user lands on AfricaTeamPay → needs USDT → goes to P2P → buys USDT → returns → completes transfer.
 
-### ✅ Done (partial — context ran out mid-session)
-- `app/how-to-buy-usdt/page.jsx` — Added gold P2P card as FIRST section (before "What you need" card). Title: "⚡ In Uganda? Buy USDT Instantly". CTA: `<a href="https://africateam-hub.vercel.app/p2p" className="btn-gold">Buy USDT on Africa Team P2P →</a>`. Inserted before the `{/* What you need */}` comment.
+### ✅ All 10 placements complete (build green 48/48, pushed to main)
 
-### ❌ Remaining — RESUME HERE next session
-
-**1. `components/SendForm.jsx`** (lines 626–628, after `showChain &&` block closes)
-Add after line 626 (`</div>` closing the chain selector card), when direction === 'outbound':
-```jsx
-{direction === 'outbound' && (
-  <p style={{ fontSize: 13, color: '#555', padding: '0 4px 12px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-    Don&apos;t have USDT yet?{' '}
-    <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
-      style={{ color: '#D4A017', textDecoration: 'none', fontWeight: 600 }}>
-      Buy USDT in Uganda → africateam-hub.vercel.app/p2p
-    </a>
-  </p>
-)}
-```
-Insert between the `showChain && (...)` block and the `{/* Contact info */}` card (between lines 626 and 629).
-
-**2. `messages/en.json`** — Update step1 in home namespace:
-- `"step1_title"`: change `"Calculate"` → `"Get USDT"`
-- `"step1_body"`: change to `"Buy USDT instantly in Uganda via Africa Team P2P, or on Binance, OKX, or any exchange worldwide."`
-
-**3. `app/page.jsx`** — How It Works section (lines 179–194)
-Add `p2p: true` to step1 in the steps array, and add link render inside the `.map()` card:
-```jsx
-// In the steps array (line 179), add p2p field:
-{ num: t('step1_num'), title: t('step1_title'), body: t('step1_body'), p2p: true },
-
-// In the map render, after the body <p>, add:
-{s.p2p && (
-  <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
-    style={{ display: 'inline-block', marginTop: 10, fontSize: 13, color: '#D4A017', fontWeight: 600 }}>
-    Buy USDT in Uganda →
-  </a>
-)}
-```
-
-**4. `app/corridors/china/page.jsx`** — "STEP BY STEP" section (line 194, before `<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr'...`)
-Insert P2P banner before the StepGroup grid:
-```jsx
-<div style={{ background: 'rgba(212,160,23,0.06)', border: '1px solid rgba(212,160,23,0.2)', borderRadius: 10, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-  <div>
-    <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Need USDT before you fly?</p>
-    <p style={{ fontSize: 13, color: '#888' }}>Buy in Uganda first with MTN MoMo — minutes, no Binance needed.</p>
-  </div>
-  <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer" className="btn-gold" style={{ whiteSpace: 'nowrap', fontSize: 13 }}>
-    Africa Team P2P Desk →
-  </a>
-</div>
-```
-Exact insertion: after `<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>` on line 194 — BEFORE that line, not inside it.
-
-**5. `app/corridors/india/page.jsx`** — "STEP BY STEP" section (line 240, before the StepGroup grid `<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>`)
-Same P2P banner as China above. Insert before the `<div style={{ display: 'grid'...` on line 240.
-
-**6. `app/corridors/turkey/page.jsx`** — "STEP BY STEP" section (line 231, before `<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>`)
-Same P2P banner. Insert before the grid div on line 231.
-
-**7. `app/corridors/uae/page.jsx`** — Before the FAQ section
-Insert same P2P banner before `<section style={{ padding: '0 24px 64px', background: 'rgba(17,17,17,0.6)' }}>` (the FAQ section, around line 36).
-
-**8. `components/Footer.jsx`** — Add "Africa Team" column after the "Tools" column (after line 74 `</div>`)
-```jsx
-{/* Africa Team */}
-<div>
-  <p className="label" style={{ marginBottom: 16 }}>Africa Team</p>
-  <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
-    style={{ display: 'block', color: '#D4A017', fontSize: 13, marginBottom: 8, textDecoration: 'none' }}>
-    Buy USDT in Uganda →
-  </a>
-  <p style={{ color: '#444', fontSize: 12 }}>africateam-hub.vercel.app/p2p</p>
-</div>
-```
-Insert after the closing `</div>` of the "Tools" column (line 74) and before the "Contact Coach" column.
-
-**9. `app/send-to-uganda/page.jsx`** — Update the "Don't have USDT yet?" banner (lines 116–138)
-Replace the existing banner content with:
-```jsx
-<div style={{ padding: '16px 20px', background: 'rgba(212,160,23,0.04)', border: '1px solid rgba(212,160,23,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-  <p style={{ fontSize: 14, color: '#888' }}>
-    Need USDT? Buy instantly in Uganda with MTN MoMo.
-  </p>
-  <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-    <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
-      style={{ fontSize: 13, color: '#D4A017', whiteSpace: 'nowrap', fontWeight: 600, textDecoration: 'none' }}>
-      Buy USDT (P2P) →
-    </a>
-    <Link href="/how-to-buy-usdt" style={{ fontSize: 13, color: '#777', whiteSpace: 'nowrap', textDecoration: 'none' }}>
-      Binance guide →
-    </Link>
-  </div>
-</div>
-```
-
-### After all 9 edits: run `npm run build` → verify green → git commit → git push
+### Placements
+1. `app/how-to-buy-usdt/page.jsx` — gold fast-lane card at top
+2. `components/SendForm.jsx` — helper text below chain selector (outbound only)
+3. `app/page.jsx` — “How It Works” step 1 renamed + P2P link
+4. `messages/en.json` — step1 text updated to “Get USDT”
+5. `app/corridors/china/page.jsx` — gold banner before StepGroup grid
+6. `app/corridors/india/page.jsx` — gold banner before StepGroup grid
+7. `app/corridors/turkey/page.jsx` — gold banner before StepGroup grid
+8. `app/corridors/uae/page.jsx` — gold banner before FAQ section
+9. `components/Footer.jsx` — “Africa Team” column with P2P link
+10. `app/send-to-uganda/page.jsx` — updated “Don’t have USDT?” banner with P2P + Binance links
 
 ## Hard Rules (Do Not Violate)
 
