@@ -65,6 +65,41 @@ export default async function HowToBuyUsdtPage() {
         {t('body')}
       </p>
 
+      {/* P2P fast lane — Uganda */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, rgba(212,160,23,0.13), rgba(212,160,23,0.05))',
+          border: '1px solid rgba(212,160,23,0.4)',
+          borderRadius: 14,
+          padding: '24px 28px',
+          marginBottom: 36,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: 'var(--font-bebas)',
+            fontSize: 22,
+            letterSpacing: '0.04em',
+            marginBottom: 10,
+          }}
+        >
+          ⚡ In Uganda? Buy USDT Instantly
+        </p>
+        <p style={{ color: '#aaa', fontSize: 14, lineHeight: 1.7, marginBottom: 18 }}>
+          The fastest way to get USDT in Uganda is through Africa Team&apos;s trusted P2P desk.
+          Buy USDT with MTN MoMo or Airtel Money in minutes — no exchange account needed.
+        </p>
+        <a
+          href="https://africateam-hub.vercel.app/p2p"
+          target="_blank"
+          rel="noreferrer"
+          className="btn-gold"
+          style={{ display: 'inline-flex' }}
+        >
+          Buy USDT on Africa Team P2P →
+        </a>
+      </div>
+
       {/* What you need */}
       <div className="card-gold" style={{ padding: '20px 24px', marginBottom: 32 }}>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#D4A017', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>
