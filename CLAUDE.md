@@ -279,24 +279,25 @@ None required for Session 9 features.
 - `components/InboundCalculator.jsx` — client component: currency selector (9 inbound currencies), amount input, live UGX output (fiat→USD→UGX via /api/rates/multi, after 1% fee)
 - `app/page.jsx` — InboundCalculator embedded in inbound banner section
 
-## What Next Session Must Build (Session 11)
+## Session 11 — What Was Built
 
-### Priority 1 — Admin: Email/PDF Receipt on Order Completion
-- Add "Email Receipt" mailto button in admin Send USDT modal (compose email with receipt link)
-- Or: trigger auto-email via a new API when admin marks order completed
+### ✅ Done
+- `lib/email.js` — nodemailer transporter: `sendReceiptEmail({ order, pdfBuffer })` sends HTML email + PDF attachment via Gmail
+- `app/api/orders/[id]/route.js` — PATCH now generates PDF buffer + sends receipt email when status → `completed` and `customer_email` present; returns `emailResult` in response
+- `app/admin/page.jsx` — `customer_email` field in New Order form; email toast "Receipt emailed to [addr]" after completing order; Suppliers tab with Verify/Feature/Remove actions; `updateSupplier()` client helper
+- `lib/db.js` — `updateSupplier(id, updates)` added (in-memory + PostgreSQL)
+- `app/api/suppliers/[id]/route.js` — PATCH handler (admin-auth): allowed fields: `is_verified`, `is_featured`, `is_active`, `featured_expires_at`
+- `app/layout.jsx` — `themeColor` moved from `metadata` to `export const viewport = { themeColor: '#D4A017' }` (fixes Next.js 14 deprecation warning)
+- `app/track/[reference]/page.jsx` — when rate lock expires on `pending`/`rate_locked` order, shows "Redirecting to /send in 8s…" and auto-redirects via `useRouter`
+- `.env.example` — added `EMAIL_USER` + `EMAIL_PASS` (Gmail App Password)
 
-### Priority 2 — Supplier Verification + Featured Badge
-- Admin panel: tab or section to manage suppliers (set is_verified, is_featured)
-- `app/api/suppliers/[id]/route.js`: add PATCH for admin to update supplier fields
+### Environment Variables Added (Session 11)
+| Variable | Purpose |
+|----------|---------|
+| `EMAIL_USER` | Gmail address for sending receipts |
+| `EMAIL_PASS` | Gmail App Password (not main password) |
 
-### Priority 3 — themeColor Viewport Migration
-- Many pages emit Next.js 14 warning: "Unsupported metadata themeColor"
-- Fix: export `generateViewport` returning `{ themeColor: '#D4A017' }` and remove from metadata
-- Affects: layout.jsx + all pages with individual metadata (china, india, turkey, etc.)
-
-### Priority 4 — Track Page: Countdown Timer
-- Rate lock countdown visible on track page for `rate_locked` orders
-- `rate_lock_expires_at` already in DB — compute remaining time client-side, show MM:SS
+## What Next Session Must Build (Session 12)
 
 ## Hard Rules (Do Not Violate)
 
