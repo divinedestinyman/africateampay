@@ -27,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata = {
   title: 'Send Money to Uganda | AfricaTeamPay — 1% Flat Fee',
   description:
-    'Uganda's USDT Corridor Network. Pay suppliers in China, India, Turkey & UAE. Diaspora? Send money home to Uganda instantly. Flat 1% fee — 80% cheaper than your bank.',
+    "Uganda's USDT Corridor Network. Pay suppliers in China, India, Turkey & UAE. Diaspora? Send money home to Uganda instantly. Flat 1% fee — 80% cheaper than your bank.",
   openGraph: {
     title: 'AfricaTeamPay — Uganda USDT Corridor Network',
     description: '80% cheaper than your bank. Flat 1% fee. Send UGX → USDT → anywhere.',

@@ -10,7 +10,7 @@ const WA = process.env.NEXT_PUBLIC_COACH_WHATSAPP || '256784277664';
 export const metadata = {
   title: 'Send Money to Uganda | AfricaTeamPay — 1% Flat Fee',
   description:
-    'Uganda's USDT Corridor Network. Pay suppliers in China, India, Turkey & UAE. Diaspora? Send money home to Uganda instantly. Flat 1% fee — 80% cheaper than your bank.',
+    "Uganda's USDT Corridor Network. Pay suppliers in China, India, Turkey & UAE. Diaspora? Send money home to Uganda instantly. Flat 1% fee — 80% cheaper than your bank.",
   openGraph: {
     title: 'Send Money to Uganda | AfricaTeamPay — 1% Flat Fee',
     description: '80% cheaper than your bank. Flat 1% fee. 15 countries.',

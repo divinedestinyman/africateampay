@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react';
 
-export const metadata = undefined; // client component — use head.jsx for metadata if needed
 
 const COUNTRIES = [
   { slug: 'china',      name: 'China',          flag: '🇨🇳', flight: 950,  hotel: 80,  meals: 30, visa: 125, stay: 10 },
