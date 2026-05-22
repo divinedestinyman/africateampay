@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 export const metadata = {
   title: 'How to Buy USDT | AfricaTeamPay',
@@ -45,10 +46,11 @@ const STEPS = [
   },
 ];
 
-export default function HowToBuyUsdtPage() {
+export default async function HowToBuyUsdtPage() {
+  const t = await getTranslations('buy_usdt');
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', padding: '60px 24px 80px' }}>
-      <p className="label" style={{ marginBottom: 12 }}>Getting Started</p>
+      <p className="label" style={{ marginBottom: 12 }}>{t('badge')}</p>
       <h1
         style={{
           fontFamily: 'var(--font-bebas)',
@@ -57,11 +59,10 @@ export default function HowToBuyUsdtPage() {
           marginBottom: 12,
         }}
       >
-        HOW TO BUY & SEND USDT
+        {t('heading')}
       </h1>
       <p style={{ color: '#888', fontSize: 15, lineHeight: 1.7, marginBottom: 40 }}>
-        USDT (Tether) is a digital dollar. 1 USDT = 1 USD, always. You buy it on your phone,
-        send it like a message, and we convert it to UGX. Here's how to do it in 10 minutes.
+        {t('body')}
       </p>
 
       {/* What you need */}

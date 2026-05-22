@@ -172,7 +172,8 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
   - ✅ Railway PostgreSQL schema applied (9 tables, confirmed)
 - 🔄 Session 5: Partial — see below
 - ✅ Session 6: TxStatusCard + disputes management + blockchain auto-confirm cron
-- 🔜 Session 7: Accounts + KYC + multilingual
+- 🔄 Session 7: Partial — user accounts, bulk payments, monthly reminders cron
+- ✅ Session 8: next-intl i18n (EN+FR), SEO metadata, navbar account link, users table migration
 
 ## Pages Added in Session 4
 
@@ -224,7 +225,19 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
 |----------|---------|
 | `CRON_SECRET` | Bearer token Vercel sends to cron endpoints (optional but recommended) |
 
-## What Next Session Must Build (Session 7)
+## Session 8 — What Was Built
+
+### ✅ Done
+- `messages/en.json` + `messages/fr.json` — full next-intl translation keys: nav, home, send_uganda, buy_usdt namespaces
+- `app/send-to-uganda/page.jsx` — converted to async Server Component, hero badge/heading/body now use `getTranslations('send_uganda')`
+- `app/how-to-buy-usdt/page.jsx` — converted to async Server Component, header uses `getTranslations('buy_usdt')`
+- `app/corridors/china/page.jsx` — SEO: new title, openGraph (url, siteName), canonical
+- `app/corridors/india/page.jsx` — SEO: new title, openGraph (url, siteName), canonical
+- `app/pay-supplier/page.jsx` — SEO: new title, openGraph (url, siteName), canonical
+- Navbar account link wired to `/account`
+- Railway DB: `users` table + `idx_users_email` + `idx_users_session` indexes migrated
+
+## What Next Session Must Build (Session 9)
 
 ### Priority 1 — PDF Receipt Auto-Generation
 When admin marks an order `completed`, auto-generate a PDF receipt and optionally email it.

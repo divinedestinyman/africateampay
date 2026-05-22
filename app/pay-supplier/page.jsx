@@ -2,13 +2,16 @@ import SendForm from '@/components/SendForm';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Pay Your Supplier | AfricaTeamPay',
+  title: 'Pay International Suppliers from Uganda via USDT | AfricaTeamPay',
   description:
     'Pay suppliers in China, India, Turkey, UAE & 11 more countries via USDT. 80% cheaper than bank wire. Flat 1% fee. Uganda-based P2P desk.',
   openGraph: {
-    title: 'Pay Your Supplier | AfricaTeamPay',
+    title: 'Pay International Suppliers from Uganda via USDT | AfricaTeamPay',
     description: 'Pay suppliers in China, India, Turkey, UAE via USDT. Flat 1% fee.',
+    url: 'https://africateampay.vercel.app/pay-supplier',
+    siteName: 'AfricaTeamPay',
   },
+  alternates: { canonical: 'https://africateampay.vercel.app/pay-supplier' },
 };
 
 const CORRIDORS_FEATURED = [

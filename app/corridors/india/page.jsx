@@ -1,8 +1,15 @@
 import Calculator from '@/components/Calculator';
 
 export const metadata = {
-  title: 'Uganda → India Corridor | Pay Indian Suppliers | AfricaTeamPay',
+  title: 'Pay Indian Supplier from Uganda Bank Transfer | AfricaTeamPay',
   description: 'Pay Indian pharma, textile and machinery suppliers from Uganda. UGX → USDT → INR. Bank T/T or USDT. 1% flat fee.',
+  openGraph: {
+    title: 'Pay Indian Supplier from Uganda | AfricaTeamPay',
+    description: 'Pay Indian suppliers from Uganda. UGX → USDT → INR. 1% flat fee.',
+    url: 'https://africateampay.vercel.app/corridors/india',
+    siteName: 'AfricaTeamPay',
+  },
+  alternates: { canonical: 'https://africateampay.vercel.app/corridors/india' },
 };
 
 const WA = process.env.NEXT_PUBLIC_COACH_WHATSAPP || '256784277664';

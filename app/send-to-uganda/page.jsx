@@ -27,14 +27,15 @@ const DIASPORA_COUNTRIES = [
   { flag: '🇰🇪', name: 'Kenya' },
 ];
 
-export default function SendToUgandaPage() {
+export default async function SendToUgandaPage() {
+  const t = await getTranslations('send_uganda');
   return (
     <>
       {/* Hero */}
       <section style={{ position: 'relative', overflow: 'hidden', padding: '80px 24px 56px' }}>
         <div className="hero-glow" />
         <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative' }}>
-          <p className="label" style={{ marginBottom: 16 }}>Diaspora → Uganda</p>
+          <p className="label" style={{ marginBottom: 16 }}>{t('badge')}</p>
           <h1
             style={{
               fontFamily: 'var(--font-bebas)',
@@ -44,12 +45,11 @@ export default function SendToUgandaPage() {
               marginBottom: 16,
             }}
           >
-            SEND MONEY HOME TO{' '}
-            <span style={{ color: '#D4A017' }}>UGANDA</span>
+            {t('heading')}{' '}
+            <span style={{ color: '#D4A017' }}>{t('heading_ug')}</span>
           </h1>
           <p style={{ color: '#999', fontSize: 16, lineHeight: 1.7, maxWidth: 520, marginBottom: 28 }}>
-            You send from anywhere in the world. Your family in Uganda receives on MTN MoMo
-            or Airtel Money within 1 hour — no bank account needed.
+            {t('body')}
           </p>
 
           {/* Country chips */}

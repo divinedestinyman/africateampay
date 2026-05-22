@@ -2,8 +2,15 @@ import Link from 'next/link';
 import Calculator from '@/components/Calculator';
 
 export const metadata = {
-  title: 'Uganda → China USDT Corridor | AfricaTeamPay',
+  title: 'Pay Chinese Supplier USDT Uganda Importers | AfricaTeamPay',
   description: 'Convert UGX to USDT before flying to Guangzhou or Yiwu. Pay suppliers directly. 1% flat fee.',
+  openGraph: {
+    title: 'Pay Chinese Supplier USDT Uganda Importers | AfricaTeamPay',
+    description: 'Convert UGX to USDT. Pay Yiwu & Guangzhou suppliers directly. Flat 1% fee.',
+    url: 'https://africateampay.vercel.app/corridors/china',
+    siteName: 'AfricaTeamPay',
+  },
+  alternates: { canonical: 'https://africateampay.vercel.app/corridors/china' },
 };
 
 const WA = process.env.NEXT_PUBLIC_COACH_WHATSAPP || '256784277664';
