@@ -1,5 +1,9 @@
 import { getOrderById, updateOrder } from '@/lib/db';
 import { notifyUsdtSent } from '@/lib/telegram';
+import { sendReceiptEmail } from '@/lib/email';
+import { renderToBuffer } from '@react-pdf/renderer';
+import ReceiptDocument from '@/components/ReceiptDocument';
+import { createElement } from 'react';
 
 export const runtime = 'nodejs';
 
@@ -51,5 +55,17 @@ export async function PATCH(request, { params }) {
     notifyUsdtSent(order).catch(() => {});
   }
 
-  return Response.json({ order });
+  // Send PDF receipt email when order is marked completed and has a customer email
+  let emailResult = null;
+  if (status === 'completed' && order.customer_email) {
+    try {
+      const pdfBuffer = await renderToBuffer(createElement(ReceiptDocument, { order }));
+      emailResult = await sendReceiptEmail({ order, pdfBuffer });
+    } catch (err) {
+      console.error('Receipt email failed:', err);
+      emailResult = { sent: false, reason: 'error' };
+    }
+  }
+
+  return Response.json({ order, emailResult });
 }

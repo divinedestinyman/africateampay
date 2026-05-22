@@ -1,6 +1,7 @@
 'use client';
 export const dynamic = 'force-dynamic';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { STATUS_LABELS, CHAINS, formatDate } from '@/lib/utils';
 
@@ -263,6 +264,7 @@ function SaveTemplateModal({ order, onClose }) {
 
 export default function TrackReferencePage({ params }) {
   const { reference } = params;
+  const router = useRouter();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -319,6 +321,14 @@ export default function TrackReferencePage({ params }) {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
+
+  // Redirect to /send 8 seconds after rate lock expires on pending/rate_locked orders
+  useEffect(() => {
+    if (!countdownExpired) return;
+    if (!order || !['pending', 'rate_locked'].includes(order.status)) return;
+    const id = setTimeout(() => router.push('/send'), 8000);
+    return () => clearTimeout(id);
+  }, [countdownExpired, order, router]);
 
   const isTerminal = order && TERMINAL_STATES.has(order.status);
   const needsPayment = order && (order.status === 'rate_locked' || order.status === 'pending');
@@ -522,7 +532,7 @@ export default function TrackReferencePage({ params }) {
                 >
                   {countdownExpired ? (
                     <p style={{ fontSize: 13, color: '#ef4444' }}>
-                      ⚠ Rate lock expired. Contact Coach on WhatsApp for a refreshed rate.
+                      ⚠ Rate lock expired — place a new order. Redirecting to /send in 8s…
                     </p>
                   ) : (
                     <p style={{ fontSize: 13, color: '#888' }}>

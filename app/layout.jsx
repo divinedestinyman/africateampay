@@ -37,8 +37,11 @@ export const metadata = {
     locale: 'en_US',
     type: 'website',
   },
-  themeColor: '#D4A017',
   metadataBase: new URL('https://africateampay.vercel.app'),
+};
+
+export const viewport = {
+  themeColor: '#D4A017',
 };
 
 export default async function RootLayout({ children }) {

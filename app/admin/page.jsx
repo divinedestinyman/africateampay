@@ -44,11 +44,17 @@ export default function AdminPage() {
   const [txHash, setTxHash] = useState('');
   const [newOrder, setNewOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState('');
+  const [emailToast, setEmailToast] = useState('');
   const [form, setForm] = useState({
     customer_name: '', customer_whatsapp: '', customer_wallet: '',
+    customer_email: '',
     corridor_id: 'china', direction: 'outbound', amount_ugx: '',
     sending_chain: 'trc20', settlement_method: '', notes: '',
   });
+
+  // Suppliers state
+  const [suppliers, setSuppliers] = useState([]);
+  const [suppliersLoading, setSuppliersLoading] = useState(false);
 
   // Disputes state
   const [disputes, setDisputes] = useState([]);
@@ -74,17 +80,40 @@ export default function AdminPage() {
     setDisputesLoading(false);
   }, [disputeFilter]);
 
+  const loadSuppliers = useCallback(async () => {
+    setSuppliersLoading(true);
+    const res = await fetch('/api/suppliers', { headers: authHeader() });
+    const data = await res.json();
+    setSuppliers(data.suppliers || []);
+    setSuppliersLoading(false);
+  }, []);
+
+  async function updateSupplier(id, updates) {
+    await fetch(`/api/suppliers/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...authHeader() },
+      body: JSON.stringify(updates),
+    });
+    loadSuppliers();
+  }
+
   useEffect(() => { load(); }, [load]);
   useEffect(() => { if (activeTab === 'disputes') loadDisputes(); }, [activeTab, loadDisputes]);
+  useEffect(() => { if (activeTab === 'suppliers') loadSuppliers(); }, [activeTab, loadSuppliers]);
 
   async function updateStatus(orderId, status, extra = {}) {
-    await fetch(`/api/orders/${orderId}`, {
+    const res = await fetch(`/api/orders/${orderId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...authHeader() },
       body: JSON.stringify({ status, ...extra }),
     });
+    const data = await res.json();
     setModal(null);
     setTxHash('');
+    if (data.emailResult?.sent) {
+      setEmailToast(`Receipt emailed to ${data.emailResult.to}`);
+      setTimeout(() => setEmailToast(''), 5000);
+    }
     load();
   }
 
@@ -110,6 +139,7 @@ export default function AdminPage() {
     setNewOrder(data.order);
     setForm({
       customer_name: '', customer_whatsapp: '', customer_wallet: '',
+      customer_email: '',
       corridor_id: 'china', direction: 'outbound', amount_ugx: '',
       sending_chain: 'trc20', settlement_method: '', notes: '',
     });
@@ -127,6 +157,12 @@ export default function AdminPage() {
 
   return (
     <div style={{ maxWidth: 1300, margin: '0 auto', padding: '32px 24px' }}>
+      {/* Email toast */}
+      {emailToast && (
+        <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 2000, background: '#1a1a1a', border: '1px solid rgba(76,175,80,0.4)', borderRadius: 8, padding: '12px 20px', color: '#4CAF50', fontSize: 14 }}>
+          ✉ {emailToast}
+        </div>
+      )}
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
         <div>
@@ -168,7 +204,7 @@ export default function AdminPage() {
 
       {/* Tab switcher */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 24, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 0 }}>
-        {['orders', 'disputes'].map(tab => (
+        {['orders', 'disputes', 'suppliers'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -315,6 +351,61 @@ export default function AdminPage() {
                 <button className="btn-outline" onClick={() => setDisputeModal(null)}>Cancel</button>
               </div>
             </ModalOverlay>
+          )}
+        </>
+      )}
+
+      {/* ── SUPPLIERS TAB ── */}
+      {activeTab === 'suppliers' && (
+        <>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+            <button className="btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={loadSuppliers}>Refresh</button>
+          </div>
+          {suppliersLoading ? (
+            <p style={{ color: '#555' }}>Loading suppliers…</p>
+          ) : suppliers.length === 0 ? (
+            <div className="card" style={{ padding: 40, textAlign: 'center' }}><p style={{ color: '#555' }}>No suppliers yet.</p></div>
+          ) : (
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                    {['Name', 'Country', 'Category', 'Accepts USDT', 'Rating', 'Featured', 'Verified', 'Active', 'Actions'].map(h => (
+                      <th key={h} style={{ padding: '10px 12px', textAlign: 'left', color: '#555', fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 400, whiteSpace: 'nowrap' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {suppliers.map(s => (
+                    <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                      <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>{s.name}</td>
+                      <td style={{ padding: '12px', fontSize: 12, color: '#aaa' }}>{s.country}</td>
+                      <td style={{ padding: '12px', fontSize: 12, color: '#aaa' }}>{s.category}</td>
+                      <td style={{ padding: '12px', fontSize: 12 }}>{s.accepts_usdt ? '✅' : '—'}</td>
+                      <td style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#D4A017' }}>
+                        {s.community_rating ? `${Number(s.community_rating).toFixed(1)} (${s.review_count || 0})` : '—'}
+                      </td>
+                      <td style={{ padding: '12px', fontSize: 12 }}>{s.is_featured ? '⭐' : '—'}</td>
+                      <td style={{ padding: '12px', fontSize: 12 }}>{s.is_verified ? '✓' : '—'}</td>
+                      <td style={{ padding: '12px', fontSize: 12 }}>{s.is_active !== false ? '✓' : '✗'}</td>
+                      <td style={{ padding: '12px' }}>
+                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                          {!s.is_verified && (
+                            <button className="btn-gold" style={{ padding: '5px 10px', fontSize: 11 }} onClick={() => updateSupplier(s.id, { is_verified: true })}>Verify ✓</button>
+                          )}
+                          {!s.is_featured && (
+                            <button className="btn-outline" style={{ padding: '5px 10px', fontSize: 11 }} onClick={() => updateSupplier(s.id, { is_featured: true, featured_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() })}>Feature ⭐</button>
+                          )}
+                          {s.is_active !== false && (
+                            <button className="btn-outline" style={{ padding: '5px 10px', fontSize: 11, color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => updateSupplier(s.id, { is_active: false })}>Remove</button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </>
       )}
@@ -497,6 +588,7 @@ export default function AdminPage() {
               {[
                 { label: 'Customer Name', key: 'customer_name', placeholder: 'John Mukisa' },
                 { label: 'WhatsApp', key: 'customer_whatsapp', placeholder: '+256700123456' },
+                { label: 'Email (for receipt)', key: 'customer_email', placeholder: 'john@example.com' },
                 { label: 'USDT Wallet', key: 'customer_wallet', placeholder: 'TXxxx...' },
                 { label: 'Amount UGX', key: 'amount_ugx', placeholder: '75,000,000', required: true },
                 { label: 'Notes', key: 'notes', placeholder: 'Traveling to Yiwu June 1st' },
