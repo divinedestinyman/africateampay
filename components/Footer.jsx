@@ -73,6 +73,16 @@ export default function Footer() {
             ))}
           </div>
 
+          {/* Africa Team */}
+          <div>
+            <p className="label" style={{ marginBottom: 16 }}>Africa Team</p>
+            <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
+              style={{ display: 'block', color: '#D4A017', fontSize: 13, marginBottom: 8, textDecoration: 'none' }}>
+              Buy USDT in Uganda →
+            </a>
+            <p style={{ color: '#444', fontSize: 12 }}>africateam-hub.vercel.app/p2p</p>
+          </div>
+
           {/* Contact */}
           <div>
             <p className="label" style={{ marginBottom: 16 }}>Contact Coach</p>

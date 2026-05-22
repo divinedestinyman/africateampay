@@ -237,6 +237,15 @@ export default function IndiaPage() {
           >
             STEP BY STEP — PAY YOUR INDIAN SUPPLIER REMOTELY
           </h2>
+          <div style={{ background: 'rgba(212,160,23,0.06)', border: '1px solid rgba(212,160,23,0.2)', borderRadius: 10, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <div>
+              <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Need USDT before you fly?</p>
+              <p style={{ fontSize: 13, color: '#888' }}>Buy in Uganda first with MTN MoMo — minutes, no Binance needed.</p>
+            </div>
+            <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer" className="btn-gold" style={{ whiteSpace: 'nowrap', fontSize: 13 }}>
+              Africa Team P2P Desk →
+            </a>
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
             <StepGroup
               title="You Do (Uganda)"

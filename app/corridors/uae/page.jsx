@@ -33,6 +33,20 @@ export default function UAEPage() {
         </div>
       </section>
 
+      <section style={{ padding: '0 24px 32px' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <div style={{ background: 'rgba(212,160,23,0.06)', border: '1px solid rgba(212,160,23,0.2)', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <div>
+              <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Need USDT before you fly?</p>
+              <p style={{ fontSize: 13, color: '#888' }}>Buy in Uganda first with MTN MoMo — minutes, no Binance needed.</p>
+            </div>
+            <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer" className="btn-gold" style={{ whiteSpace: 'nowrap', fontSize: 13 }}>
+              Africa Team P2P Desk →
+            </a>
+          </div>
+        </div>
+      </section>
+
       <section style={{ padding: '0 24px 64px', background: 'rgba(17,17,17,0.6)' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', paddingTop: 48 }}>
           <p className="label" style={{ marginBottom: 12 }}>FAQ</p>

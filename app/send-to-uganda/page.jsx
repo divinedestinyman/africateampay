@@ -113,28 +113,19 @@ export default async function SendToUgandaPage() {
           </div>
 
           {/* Don't have USDT? */}
-          <div
-            style={{
-              padding: '16px 20px',
-              background: 'rgba(212,160,23,0.04)',
-              border: '1px solid rgba(212,160,23,0.15)',
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: 12,
-            }}
-          >
+          <div style={{ padding: '16px 20px', background: 'rgba(212,160,23,0.04)', border: '1px solid rgba(212,160,23,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <p style={{ fontSize: 14, color: '#888' }}>
-              Don't have USDT yet? It takes 10 minutes to set up on Binance.
+              Need USDT? Buy instantly in Uganda with MTN MoMo.
             </p>
-            <Link
-              href="/how-to-buy-usdt"
-              style={{ fontSize: 13, color: '#D4A017', whiteSpace: 'nowrap' }}
-            >
-              How to buy USDT →
-            </Link>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
+                style={{ fontSize: 13, color: '#D4A017', whiteSpace: 'nowrap', fontWeight: 600, textDecoration: 'none' }}>
+                Buy USDT (P2P) →
+              </a>
+              <Link href="/how-to-buy-usdt" style={{ fontSize: 13, color: '#777', whiteSpace: 'nowrap', textDecoration: 'none' }}>
+                Binance guide →
+              </Link>
+            </div>
           </div>
         </div>
       </section>

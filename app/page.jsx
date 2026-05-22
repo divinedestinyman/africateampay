@@ -177,7 +177,7 @@ export default async function HomePage() {
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
             {[
-              { num: t('step1_num'), title: t('step1_title'), body: t('step1_body') },
+              { num: t('step1_num'), title: t('step1_title'), body: t('step1_body'), p2p: true },
               { num: t('step2_num'), title: t('step2_title'), body: t('step2_body') },
               { num: t('step3_num'), title: t('step3_title'), body: t('step3_body') },
             ].map(s => (
@@ -189,6 +189,12 @@ export default async function HomePage() {
                   {s.title}
                 </p>
                 <p style={{ color: '#888', fontSize: 14, lineHeight: 1.7 }}>{s.body}</p>
+                {s.p2p && (
+                  <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
+                    style={{ display: 'inline-block', marginTop: 10, fontSize: 13, color: '#D4A017', fontWeight: 600, textDecoration: 'none' }}>
+                    Buy USDT in Uganda →
+                  </a>
+                )}
               </div>
             ))}
           </div>

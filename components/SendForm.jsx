@@ -625,6 +625,16 @@ export default function SendForm({ defaultDirection = 'outbound' }) {
           </div>
         )}
 
+        {direction === 'outbound' && (
+          <p style={{ fontSize: 13, color: '#555', padding: '0 4px 12px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            Don&apos;t have USDT yet?{' '}
+            <a href="https://africateam-hub.vercel.app/p2p" target="_blank" rel="noreferrer"
+              style={{ color: '#D4A017', textDecoration: 'none', fontWeight: 600 }}>
+              Buy USDT in Uganda → africateam-hub.vercel.app/p2p
+            </a>
+          </p>
+        )}
+
         {/* Contact info */}
         <div style={S.card}>
           <p style={S.sectionLabel}>Your Contact Information</p>
