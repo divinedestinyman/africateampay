@@ -9,11 +9,9 @@ export default function LanguageSwitcher() {
     if (match) {
       setLocale(match.split('=')[1].trim());
     } else {
-      // Auto-detect from browser on first visit
-      const lang = navigator.language || '';
-      if (lang.toLowerCase().startsWith('fr')) {
-        switchLocale('fr');
-      }
+      const lang = (navigator.language || '').toLowerCase();
+      if (lang.startsWith('fr')) switchLocale('fr');
+      else if (lang.startsWith('ar')) switchLocale('ar');
     }
   }, []);
 
@@ -27,6 +25,7 @@ export default function LanguageSwitcher() {
       {[
         { code: 'en', label: 'EN', flag: '🇬🇧' },
         { code: 'fr', label: 'FR', flag: '🇫🇷' },
+        { code: 'ar', label: 'AR', flag: '🇸🇦' },
       ].map(({ code, label, flag }) => {
         const active = locale === code;
         return (
@@ -45,7 +44,7 @@ export default function LanguageSwitcher() {
               letterSpacing: '0.05em',
               transition: 'all 0.15s',
             }}
-            title={code === 'en' ? 'English' : 'Français'}
+            title={code === 'en' ? 'English' : code === 'fr' ? 'Français' : 'العربية'}
           >
             {flag} {label}
           </button>

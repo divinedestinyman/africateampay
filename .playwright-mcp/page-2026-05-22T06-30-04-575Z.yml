@@ -1,0 +1,226 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "AFRICATEAMPAY" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: AFRICATEAMPAY
+      - generic [ref=e6]:
+        - link "China" [ref=e7] [cursor=pointer]:
+          - /url: /corridors/china
+        - link "UAE" [ref=e8] [cursor=pointer]:
+          - /url: /corridors/uae
+        - link "UK" [ref=e9] [cursor=pointer]:
+          - /url: /corridors/uk
+        - link "Kenya" [ref=e10] [cursor=pointer]:
+          - /url: /corridors/kenya
+        - link "Track" [ref=e11] [cursor=pointer]:
+          - /url: /track
+        - link "Calculate →" [ref=e12] [cursor=pointer]:
+          - /url: /calculate
+  - main [ref=e13]:
+    - generic [ref=e15]:
+      - text: 🇨🇳
+      - paragraph [ref=e16]: Uganda → China Corridor
+      - heading "UGANDAN TRADERS — BEAT THE BANK IN CHINA" [level=1] [ref=e17]:
+        - text: UGANDAN TRADERS —
+        - text: BEAT THE BANK IN CHINA
+      - paragraph [ref=e18]: Convert your UGX to USDT before you fly. Spend directly at Yiwu and Guangzhou markets. Pay suppliers instantly. No wire transfer. No delays.
+      - generic [ref=e19]:
+        - link "Calculate My Transfer →" [ref=e20] [cursor=pointer]:
+          - /url: "#calculator"
+        - link "WhatsApp Coach" [ref=e21] [cursor=pointer]:
+          - /url: https://wa.me/256784277664
+    - generic [ref=e23]:
+      - paragraph [ref=e24]: What Ugandan Traders Are Paying Today
+      - heading "THE REAL COST OF MOVING MONEY TO CHINA" [level=2] [ref=e25]
+      - table [ref=e27]:
+        - rowgroup [ref=e28]:
+          - row "Method Fee on $10,000 Time Risk" [ref=e29]:
+            - columnheader "Method" [ref=e30]
+            - columnheader "Fee on $10,000" [ref=e31]
+            - columnheader "Time" [ref=e32]
+            - columnheader "Risk" [ref=e33]
+        - rowgroup [ref=e34]:
+          - row "Bank Wire $800–1,200 3–5 days Account freezes" [ref=e35]:
+            - cell "Bank Wire" [ref=e36]
+            - cell "$800–1,200" [ref=e37]
+            - cell "3–5 days" [ref=e38]
+            - cell "Account freezes" [ref=e39]
+          - row "Western Union $500–800 1–2 days Cash handling" [ref=e40]:
+            - cell "Western Union" [ref=e41]
+            - cell "$500–800" [ref=e42]
+            - cell "1–2 days" [ref=e43]
+            - cell "Cash handling" [ref=e44]
+          - row "Forex Bureau $400–600 Same day Rate manipulation" [ref=e45]:
+            - cell "Forex Bureau" [ref=e46]
+            - cell "$400–600" [ref=e47]
+            - cell "Same day" [ref=e48]
+            - cell "Rate manipulation" [ref=e49]
+          - row "✓AfricaTeamPay USDT $100 (1%) 1 hour None" [ref=e50]:
+            - cell "✓AfricaTeamPay USDT" [ref=e51]
+            - cell "$100 (1%)" [ref=e52]
+            - cell "1 hour" [ref=e53]
+            - cell "None" [ref=e54]
+    - generic [ref=e56]:
+      - paragraph [ref=e57]: How it works in China
+      - heading "USDT IS ACCEPTED IN YIWU & GUANGZHOU" [level=2] [ref=e58]
+      - paragraph [ref=e59]: Merchants in Yiwu and Guangzhou accept USDT directly. Over 3,000 merchants in Yiwu processed $1B+ in USDT monthly. Your wallet works like cash — scan, pay, done.
+      - generic [ref=e60]:
+        - paragraph [ref=e61]: Can't find a USDT merchant?
+        - paragraph [ref=e62]:
+          - text: Sell your USDT on
+          - strong [ref=e63]: Binance P2P
+          - text: in China. Receive CNY in your WeChat Pay or Alipay within 30 minutes.
+    - generic [ref=e65]:
+      - paragraph [ref=e66]: Calculate now
+      - heading "HOW MUCH USDT WILL YOU GET?" [level=2] [ref=e67]
+      - generic [ref=e69]:
+        - generic [ref=e71]:
+          - paragraph [ref=e72]: Live Rate
+          - paragraph [ref=e73]: ...
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: I want to send (UGX)
+            - textbox "e.g. 75,000,000" [ref=e77]
+          - generic [ref=e78]:
+            - generic [ref=e79]: I am going to
+            - combobox [ref=e80] [cursor=pointer]:
+              - option "🇨🇳 China" [selected]
+              - option "🇦🇪 UAE"
+              - option "🇬🇧 United Kingdom"
+              - option "🇰🇪 Kenya"
+        - link "WhatsApp Coach to Start →":
+          - /url: "#"
+        - generic [ref=e81]:
+          - paragraph [ref=e82]: Fee comparison
+          - generic [ref=e83]:
+            - generic [ref=e84]: Bank Wire
+            - generic [ref=e85]: 8–12%
+          - generic [ref=e86]:
+            - generic [ref=e87]: Western Union
+            - generic [ref=e88]: 5–8%
+          - generic [ref=e89]:
+            - generic [ref=e90]: Forex Bureau
+            - generic [ref=e91]: 4–6%
+          - generic [ref=e92]:
+            - generic [ref=e93]: AfricaTeamPay
+            - generic [ref=e94]: 1% flat
+    - generic [ref=e96]:
+      - paragraph [ref=e97]: Complete process
+      - heading "STEP BY STEP — BEFORE & DURING YOUR TRIP" [level=2] [ref=e98]
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: Before You Fly
+          - generic [ref=e102]:
+            - generic [ref=e103]: "1."
+            - generic [ref=e104]: "DM Coach on WhatsApp: wa.me/256784277664"
+          - generic [ref=e105]:
+            - generic [ref=e106]: "2."
+            - generic [ref=e107]: Share how much UGX you want to convert
+          - generic [ref=e108]:
+            - generic [ref=e109]: "3."
+            - generic [ref=e110]: Receive your order number and MoMo payment instructions
+          - generic [ref=e111]:
+            - generic [ref=e112]: "4."
+            - generic [ref=e113]: Send UGX via MTN MoMo to Coach
+          - generic [ref=e114]:
+            - generic [ref=e115]: "5."
+            - generic [ref=e116]: Coach sends USDT to your Trust Wallet / Binance
+          - generic [ref=e117]:
+            - generic [ref=e118]: "6."
+            - generic [ref=e119]: WhatsApp confirmation sent to you
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - paragraph [ref=e122]: At Yiwu / Guangzhou Market
+            - generic [ref=e123]:
+              - generic [ref=e124]: "1."
+              - generic [ref=e125]: Open Trust Wallet or Binance
+            - generic [ref=e126]:
+              - generic [ref=e127]: "2."
+              - generic [ref=e128]: Scan merchant's USDT QR code
+            - generic [ref=e129]:
+              - generic [ref=e130]: "3."
+              - generic [ref=e131]: Enter amount and confirm
+            - generic [ref=e132]:
+              - generic [ref=e133]: "4."
+              - generic [ref=e134]: Merchant sees payment instantly
+            - generic [ref=e135]:
+              - generic [ref=e136]: "5."
+              - generic [ref=e137]: Buy your goods
+          - generic [ref=e138]:
+            - paragraph [ref=e139]: If Merchant Doesn't Accept USDT
+            - generic [ref=e140]:
+              - generic [ref=e141]: "1."
+              - generic [ref=e142]: Open Binance P2P
+            - generic [ref=e143]:
+              - generic [ref=e144]: "2."
+              - generic [ref=e145]: Post USDT sell order
+            - generic [ref=e146]:
+              - generic [ref=e147]: "3."
+              - generic [ref=e148]: Chinese buyer sends CNY to your WeChat/Alipay
+            - generic [ref=e149]:
+              - generic [ref=e150]: "4."
+              - generic [ref=e151]: Takes 20–40 minutes
+    - generic [ref=e153]:
+      - paragraph [ref=e154]: FAQ
+      - heading "COMMON QUESTIONS" [level=2] [ref=e155]
+      - generic [ref=e156]:
+        - paragraph [ref=e157]: Is USDT legal in Uganda?
+        - paragraph [ref=e158]: Uganda has no specific crypto law. USDT conversion is currently unrestricted. We operate transparently.
+      - generic [ref=e159]:
+        - paragraph [ref=e160]: Is USDT accepted in China?
+        - paragraph [ref=e161]: "Yes. Thousands of Yiwu and Guangzhou merchants accept it. Those that don't: Binance P2P converts to CNY in under an hour."
+      - generic [ref=e162]:
+        - paragraph [ref=e163]: What if I have USDT left after shopping?
+        - paragraph [ref=e164]: Bring it back. Coach buys your remaining USDT at 0.5% below market rate. You receive UGX via mobile money same day.
+      - generic [ref=e165]:
+        - paragraph [ref=e166]: What is Tron (TRC20)?
+        - paragraph [ref=e167]: The cheapest USDT network. Sending 10,000 USDT costs $0.01. Always use TRC20 — not ERC20 (Ethereum) which costs $5–20.
+      - generic [ref=e168]:
+        - paragraph [ref=e169]: How long does conversion take?
+        - paragraph [ref=e170]: "UGX received → USDT sent within 1 hour during business hours. Urgent transfers: WhatsApp Coach directly."
+      - generic [ref=e171]:
+        - paragraph [ref=e172]: What is the minimum transfer?
+        - paragraph [ref=e173]: Minimum 500,000 UGX (~$135). No maximum.
+      - generic [ref=e174]:
+        - paragraph [ref=e175]: What wallet do I need?
+        - paragraph [ref=e176]: Trust Wallet (recommended, free) or Binance app. Coach can help you set it up before you travel.
+    - generic [ref=e178]:
+      - paragraph [ref=e179]: READY TO TRAVEL SMARTER?
+      - paragraph [ref=e180]: WhatsApp Coach now to start your transfer.
+      - generic [ref=e181]:
+        - link "WhatsApp Coach →" [ref=e182] [cursor=pointer]:
+          - /url: https://wa.me/256784277664
+        - link "Calculate Transfer →" [ref=e183] [cursor=pointer]:
+          - /url: "#calculator"
+  - contentinfo [ref=e184]:
+    - generic [ref=e185]:
+      - generic [ref=e186]:
+        - generic [ref=e187]:
+          - paragraph [ref=e188]: AFRICATEAMPAY
+          - paragraph [ref=e189]: Uganda's trusted USDT corridor network. Flat 1% fee. Every transaction confirmed.
+        - generic [ref=e190]:
+          - paragraph [ref=e191]: Corridors
+          - link "🇨🇳 Uganda → China" [ref=e192] [cursor=pointer]:
+            - /url: /corridors/china
+          - link "🇦🇪 Uganda → UAE" [ref=e193] [cursor=pointer]:
+            - /url: /corridors/uae
+          - link "🇬🇧 Uganda → UK" [ref=e194] [cursor=pointer]:
+            - /url: /corridors/uk
+          - link "🇰🇪 Uganda → Kenya" [ref=e195] [cursor=pointer]:
+            - /url: /corridors/kenya
+        - generic [ref=e196]:
+          - paragraph [ref=e197]: Tools
+          - link "Calculator" [ref=e198] [cursor=pointer]:
+            - /url: /calculate
+          - link "Track Order" [ref=e199] [cursor=pointer]:
+            - /url: /track
+        - generic [ref=e200]:
+          - paragraph [ref=e201]: Contact Coach
+          - link "WhatsApp →" [ref=e202] [cursor=pointer]:
+            - /url: https://wa.me/256784277664
+          - paragraph [ref=e203]: "Business hours: 8am–8pm EAT"
+      - generic [ref=e205]:
+        - paragraph [ref=e206]: © 2026 AfricaTeamPay. Part of the Africa Team community.
+        - paragraph [ref=e207]: USDT transfers via Tron (TRC20) network.
+  - alert [ref=e208]

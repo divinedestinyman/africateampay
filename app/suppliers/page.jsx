@@ -4,6 +4,76 @@ import { useState, useEffect } from 'react';
 const COUNTRIES = ['China', 'India', 'Turkey', 'UAE', 'Other'];
 const CATEGORIES = ['Electronics', 'Textiles', 'Machinery', 'Pharma', 'Food', 'Construction', 'Cosmetics', 'General'];
 
+function StarWidget({ supplierId, currentRating, reviewCount, onRated }) {
+  const [hovered, setHovered] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+
+  async function rate(stars) {
+    if (submitting || done) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/suppliers/${supplierId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating: stars }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDone(true);
+        onRated(data.community_rating, data.review_count);
+      }
+    } finally { setSubmitting(false); }
+  }
+
+  const display = hovered || Math.round(currentRating || 0);
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
+      {[1,2,3,4,5].map(n => (
+        <button key={n}
+          onMouseEnter={() => !done && setHovered(n)}
+          onMouseLeave={() => setHovered(0)}
+          onClick={() => rate(n)}
+          disabled={submitting || done}
+          style={{ background: 'none', border: 'none', cursor: done ? 'default' : 'pointer', padding: 2, fontSize: 16, color: n <= display ? '#D4A017' : '#333', transition: 'color 0.1s' }}
+        >★</button>
+      ))}
+      {currentRating
+        ? <span style={{ fontSize: 12, color: '#666' }}>{Number(currentRating).toFixed(1)} ({reviewCount || 0})</span>
+        : <span style={{ fontSize: 11, color: '#444' }}>Rate this supplier</span>}
+      {done && <span style={{ fontSize: 11, color: '#4CAF50' }}>✓ Rated</span>}
+    </div>
+  );
+}
+
+function SupplierCard({ supplier: s, onRated }) {
+  return (
+    <div className={s.is_featured ? 'card-gold' : 'card'} style={{ padding: 24 }}>
+      {s.is_featured && <p style={{ fontSize: 11, color: '#D4A017', marginBottom: 8 }}>⭐ FEATURED</p>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 12 }}>
+        <div>
+          <p style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{s.name}</p>
+          <p style={{ fontSize: 12, color: '#D4A017' }}>{s.category}</p>
+        </div>
+        {s.is_verified && (
+          <span style={{ fontSize: 11, padding: '2px 8px', background: 'rgba(76,175,80,0.2)', color: '#4CAF50', borderRadius: 4 }}>✓ Verified</span>
+        )}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13, color: '#888' }}>
+        {s.city && <p>📍 {s.city}{s.market_location ? ` — ${s.market_location}` : ''}</p>}
+        {s.min_order_usd && <p>💵 Min order: ${Number(s.min_order_usd).toLocaleString()}</p>}
+        <p>{s.accepts_usdt ? '✅ Accepts USDT' : '💱 T/T wire only'}</p>
+      </div>
+      <StarWidget
+        supplierId={s.id}
+        currentRating={s.community_rating}
+        reviewCount={s.review_count}
+        onRated={onRated}
+      />
+    </div>
+  );
+}
+
 export default function SuppliersPage() {
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -91,22 +161,9 @@ export default function SuppliersPage() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 20 }}>
           {suppliers.map(s => (
-            <div key={s.id} className={s.is_featured ? 'card-gold' : 'card'} style={{ padding: 24 }}>
-              {s.is_featured && <p style={{ fontSize: 11, color: '#D4A017', marginBottom: 8 }}>⭐ FEATURED</p>}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 12 }}>
-                <div>
-                  <p style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{s.name}</p>
-                  <p style={{ fontSize: 12, color: '#D4A017' }}>{s.category}</p>
-                </div>
-                {s.is_verified && <span style={{ fontSize: 11, padding: '2px 8px', background: 'rgba(76,175,80,0.2)', color: '#4CAF50', borderRadius: 4 }}>✓ Verified</span>}
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13, color: '#888' }}>
-                {s.city && <p>📍 {s.city}{s.market_location ? ` — ${s.market_location}` : ''}</p>}
-                {s.min_order_usd && <p>💵 Min order: ${Number(s.min_order_usd).toLocaleString()}</p>}
-                <p>{s.accepts_usdt ? '✅ Accepts USDT' : '💱 T/T wire only'}</p>
-                {s.community_rating && <p>⭐ {Number(s.community_rating).toFixed(1)} / 5.0 ({s.review_count} reviews)</p>}
-              </div>
-            </div>
+            <SupplierCard key={s.id} supplier={s} onRated={(rating, count) =>
+              setSuppliers(prev => prev.map(x => x.id === s.id ? { ...x, community_rating: rating, review_count: count } : x))
+            } />
           ))}
         </div>
       )}

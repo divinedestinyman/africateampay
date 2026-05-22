@@ -1,0 +1,59 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "AFRICATEAMPAY" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: AFRICATEAMPAY
+      - generic [ref=e6]:
+        - link "China" [ref=e7] [cursor=pointer]:
+          - /url: /corridors/china
+        - link "UAE" [ref=e8] [cursor=pointer]:
+          - /url: /corridors/uae
+        - link "UK" [ref=e9] [cursor=pointer]:
+          - /url: /corridors/uk
+        - link "Kenya" [ref=e10] [cursor=pointer]:
+          - /url: /corridors/kenya
+        - link "Track" [ref=e11] [cursor=pointer]:
+          - /url: /track
+        - link "Calculate →" [ref=e12] [cursor=pointer]:
+          - /url: /calculate
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - paragraph [ref=e15]: Order Tracking
+      - heading "TRACK YOUR ORDER" [level=1] [ref=e16]
+      - generic [ref=e17]:
+        - generic [ref=e18]: Enter your reference number
+        - generic [ref=e19]:
+          - textbox "ATP-20260520-1234" [ref=e20]
+          - button "Track" [disabled] [ref=e21] [cursor=pointer]
+  - contentinfo [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - paragraph [ref=e26]: AFRICATEAMPAY
+          - paragraph [ref=e27]: Uganda's trusted USDT corridor network. Flat 1% fee. Every transaction confirmed.
+        - generic [ref=e28]:
+          - paragraph [ref=e29]: Corridors
+          - link "🇨🇳 Uganda → China" [ref=e30] [cursor=pointer]:
+            - /url: /corridors/china
+          - link "🇦🇪 Uganda → UAE" [ref=e31] [cursor=pointer]:
+            - /url: /corridors/uae
+          - link "🇬🇧 Uganda → UK" [ref=e32] [cursor=pointer]:
+            - /url: /corridors/uk
+          - link "🇰🇪 Uganda → Kenya" [ref=e33] [cursor=pointer]:
+            - /url: /corridors/kenya
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: Tools
+          - link "Calculator" [ref=e36] [cursor=pointer]:
+            - /url: /calculate
+          - link "Track Order" [ref=e37] [cursor=pointer]:
+            - /url: /track
+        - generic [ref=e38]:
+          - paragraph [ref=e39]: Contact Coach
+          - link "WhatsApp →" [ref=e40] [cursor=pointer]:
+            - /url: https://wa.me/256784277664
+          - paragraph [ref=e41]: "Business hours: 8am–8pm EAT"
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: © 2026 AfricaTeamPay. Part of the Africa Team community.
+        - paragraph [ref=e45]: USDT transfers via Tron (TRC20) network.
+  - alert [ref=e46]

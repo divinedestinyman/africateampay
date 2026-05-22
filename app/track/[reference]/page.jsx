@@ -86,7 +86,7 @@ function TxStatusCard({ hash, chain, reference }) {
           )}
 
           <a
-            href={`/receipt/${reference}`}
+            href={`/api/receipt/${reference}/pdf`}
             style={{
               display: 'inline-block',
               padding: '8px 16px',
@@ -97,7 +97,7 @@ function TxStatusCard({ hash, chain, reference }) {
               textDecoration: 'none',
             }}
           >
-            ↓ Download Receipt
+            ↓ Download PDF Receipt
           </a>
         </>
       )}

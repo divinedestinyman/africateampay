@@ -1,0 +1,162 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "AFRICATEAMPAY" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: AFRICATEAMPAY
+      - generic [ref=e6]:
+        - link "China" [ref=e7] [cursor=pointer]:
+          - /url: /corridors/china
+        - link "UAE" [ref=e8] [cursor=pointer]:
+          - /url: /corridors/uae
+        - link "UK" [ref=e9] [cursor=pointer]:
+          - /url: /corridors/uk
+        - link "Kenya" [ref=e10] [cursor=pointer]:
+          - /url: /corridors/kenya
+        - link "Track" [ref=e11] [cursor=pointer]:
+          - /url: /track
+        - link "Calculate →" [ref=e12] [cursor=pointer]:
+          - /url: /calculate
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - paragraph [ref=e15]: Self-Service Order Form
+      - heading "PLACE YOUR ORDER" [level=1] [ref=e16]
+      - paragraph [ref=e17]: No WhatsApp needed. Fill the form — get a wallet address — send USDT.
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - button "↗ I am in Uganda — sending OUT Pay suppliers in China, UAE, India & more" [ref=e20] [cursor=pointer]:
+            - generic [ref=e21]: ↗
+            - generic [ref=e22]: I am in Uganda — sending OUT
+            - generic [ref=e23]: Pay suppliers in China, UAE, India & more
+          - button "↙ I am abroad — sending HOME Family receives MTN MoMo or bank transfer" [ref=e24] [cursor=pointer]:
+            - generic [ref=e25]: ↙
+            - generic [ref=e26]: I am abroad — sending HOME
+            - generic [ref=e27]: Family receives MTN MoMo or bank transfer
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - paragraph [ref=e30]: Transfer Amount
+            - generic [ref=e31]:
+              - generic [ref=e32]: Amount in UGX
+              - spinbutton [ref=e33]
+              - paragraph [ref=e34]: "Minimum: UGX 500,000"
+            - generic [ref=e35]:
+              - generic [ref=e36]: Destination Country
+              - combobox [ref=e37] [cursor=pointer]:
+                - option "— Select country —" [selected]
+                - option "🇨🇳 China"
+                - option "🇩🇪 Germany"
+                - option "🇮🇳 India"
+                - option "🇯🇵 Japan"
+                - option "🇰🇪 Kenya"
+                - option "🇲🇾 Malaysia"
+                - option "🇰🇷 South Korea"
+                - option "🇹🇷 Turkey"
+                - option "🇦🇪 UAE"
+                - option "🇬🇧 United Kingdom"
+                - option "🇺🇸 United States"
+                - option "🌍 Other country"
+          - generic [ref=e38]:
+            - paragraph [ref=e39]: Supplier Details
+            - generic [ref=e40]:
+              - generic [ref=e41]: How does your supplier want to be paid?
+              - combobox [ref=e42] [cursor=pointer]:
+                - option "USDT to supplier's wallet (fastest)" [selected]
+                - option "Bank wire transfer (T/T) — 3–5 days"
+                - option "Local agent in country — 24 hrs"
+                - option "Alibaba Trade Assurance"
+            - generic [ref=e43]:
+              - generic [ref=e44]: Supplier Name (optional)
+              - textbox "Company or individual name" [ref=e45]
+            - generic [ref=e46]:
+              - generic [ref=e47]: Supplier's USDT Wallet Address
+              - textbox "Wallet address" [ref=e48]
+              - paragraph [ref=e49]: TRC20, BEP20, or other — match your chosen chain below
+            - generic [ref=e50]:
+              - generic [ref=e51]: Goods Description (optional)
+              - textbox "e.g. Fabric rolls, electronics, machinery" [ref=e52]
+            - generic [ref=e53]:
+              - generic [ref=e54]: Payment Structure
+              - combobox [ref=e55] [cursor=pointer]:
+                - option "Single payment (trusted supplier)" [selected]
+                - option "30% deposit + 70% on shipment (new supplier)"
+                - option "50/50 split"
+          - generic [ref=e56]:
+            - paragraph [ref=e57]: Sending Chain
+            - generic [ref=e58]:
+              - generic [ref=e59] [cursor=pointer]:
+                - radio "Tron (TRC20)RECOMMENDED $0.01" [checked] [ref=e60]
+                - generic [ref=e62]: Tron (TRC20)RECOMMENDED
+                - generic [ref=e63]: $0.01
+              - generic [ref=e64] [cursor=pointer]:
+                - radio "BNB Smart Chain (BEP20) ~$0.05" [ref=e65]
+                - generic [ref=e66]: BNB Smart Chain (BEP20)
+                - generic [ref=e67]: ~$0.05
+              - generic [ref=e68] [cursor=pointer]:
+                - radio "Polygon ~$0.01" [ref=e69]
+                - generic [ref=e70]: Polygon
+                - generic [ref=e71]: ~$0.01
+              - generic [ref=e72] [cursor=pointer]:
+                - radio "Solana ~$0.001" [ref=e73]
+                - generic [ref=e74]: Solana
+                - generic [ref=e75]: ~$0.001
+              - generic [ref=e76] [cursor=pointer]:
+                - radio "Ethereum (ERC20) $3–15" [ref=e77]
+                - generic [ref=e78]: Ethereum (ERC20)
+                - generic [ref=e79]: $3–15
+              - generic [ref=e80] [cursor=pointer]:
+                - radio "Base (USDC) ~$0.001" [ref=e81]
+                - generic [ref=e82]: Base (USDC)
+                - generic [ref=e83]: ~$0.001
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Your Contact Information
+            - generic [ref=e86]:
+              - generic [ref=e88]:
+                - generic [ref=e89]: Your Full Name *
+                - textbox "Your name" [ref=e90]
+              - generic [ref=e92]:
+                - generic [ref=e93]: Email Address *
+                - textbox "you@email.com" [ref=e94]
+                - paragraph [ref=e95]: Order confirmation + tracking sent here
+            - generic [ref=e96]:
+              - generic [ref=e98]:
+                - generic [ref=e99]: WhatsApp (optional)
+                - textbox "256700000000" [ref=e100]
+              - generic [ref=e102]:
+                - generic [ref=e103]: Telegram Username (optional)
+                - textbox "username (no @)" [ref=e104]
+            - generic [ref=e105]:
+              - generic [ref=e106]: Notes for Coach (optional)
+              - textbox "Any special instructions, supplier contact, order details..." [ref=e107]
+          - button "Lock Rate & Place Order →" [ref=e108] [cursor=pointer]
+          - paragraph [ref=e109]: No payment yet. You will receive a wallet address after submitting. Rate locked for 30 minutes.
+  - contentinfo [ref=e110]:
+    - generic [ref=e111]:
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - paragraph [ref=e114]: AFRICATEAMPAY
+          - paragraph [ref=e115]: Uganda's trusted USDT corridor network. Flat 1% fee. Every transaction confirmed.
+        - generic [ref=e116]:
+          - paragraph [ref=e117]: Corridors
+          - link "🇨🇳 Uganda → China" [ref=e118] [cursor=pointer]:
+            - /url: /corridors/china
+          - link "🇦🇪 Uganda → UAE" [ref=e119] [cursor=pointer]:
+            - /url: /corridors/uae
+          - link "🇬🇧 Uganda → UK" [ref=e120] [cursor=pointer]:
+            - /url: /corridors/uk
+          - link "🇰🇪 Uganda → Kenya" [ref=e121] [cursor=pointer]:
+            - /url: /corridors/kenya
+        - generic [ref=e122]:
+          - paragraph [ref=e123]: Tools
+          - link "Calculator" [ref=e124] [cursor=pointer]:
+            - /url: /calculate
+          - link "Track Order" [ref=e125] [cursor=pointer]:
+            - /url: /track
+        - generic [ref=e126]:
+          - paragraph [ref=e127]: Contact Coach
+          - link "WhatsApp →" [ref=e128] [cursor=pointer]:
+            - /url: https://wa.me/256784277664
+          - paragraph [ref=e129]: "Business hours: 8am–8pm EAT"
+      - generic [ref=e131]:
+        - paragraph [ref=e132]: © 2026 AfricaTeamPay. Part of the Africa Team community.
+        - paragraph [ref=e133]: USDT transfers via Tron (TRC20) network.
+  - alert [ref=e134]

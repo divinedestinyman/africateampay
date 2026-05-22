@@ -1,0 +1,214 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "AFRICATEAMPAY" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: AFRICATEAMPAY
+      - generic [ref=e6]:
+        - link "China" [ref=e7] [cursor=pointer]:
+          - /url: /corridors/china
+        - link "UAE" [ref=e8] [cursor=pointer]:
+          - /url: /corridors/uae
+        - link "UK" [ref=e9] [cursor=pointer]:
+          - /url: /corridors/uk
+        - link "Kenya" [ref=e10] [cursor=pointer]:
+          - /url: /corridors/kenya
+        - link "Track" [ref=e11] [cursor=pointer]:
+          - /url: /track
+        - link "Calculate →" [ref=e12] [cursor=pointer]:
+          - /url: /calculate
+  - main [ref=e13]:
+    - generic [ref=e15]:
+      - paragraph [ref=e16]: Diaspora → Uganda
+      - heading "SEND MONEY HOME TO UGANDA" [level=1] [ref=e17]
+      - paragraph [ref=e18]: You send from anywhere in the world. Your family in Uganda receives on MTN MoMo or Airtel Money within 1 hour — no bank account needed.
+      - generic [ref=e19]:
+        - generic [ref=e20]: 🇺🇸 USA
+        - generic [ref=e21]: 🇬🇧 UK
+        - generic [ref=e22]: 🇦🇪 UAE
+        - generic [ref=e23]: 🇸🇦 Saudi Arabia
+        - generic [ref=e24]: 🇨🇦 Canada
+        - generic [ref=e25]: 🇦🇺 Australia
+        - generic [ref=e26]: 🇩🇪 Germany
+        - generic [ref=e27]: 🇶🇦 Qatar
+        - generic [ref=e28]: 🇰🇪 Kenya
+      - generic [ref=e29]:
+        - generic [ref=e30]: ✓ 1% flat fee — no hidden charges
+        - generic [ref=e31]: ✓ MTN MoMo delivered in 1 hour
+        - generic [ref=e32]: ✓ TRC20 — $0.01 network fee
+        - generic [ref=e33]: ✓ 5 settlement options
+        - generic [ref=e34]: ✓ 33 sending currencies
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - paragraph [ref=e39]: "01"
+          - paragraph [ref=e40]: Fill the form
+          - paragraph [ref=e41]: Enter the amount in your currency. Add recipient MTN MoMo number. Takes 2 minutes.
+        - generic [ref=e42]:
+          - paragraph [ref=e43]: "02"
+          - paragraph [ref=e44]: Send USDT
+          - paragraph [ref=e45]: You get a wallet address. Buy USDT on Binance and send it. Rate locked for 30 minutes.
+        - generic [ref=e46]:
+          - paragraph [ref=e47]: "03"
+          - paragraph [ref=e48]: Family gets paid
+          - paragraph [ref=e49]: Coach confirms receipt and sends UGX to recipient's mobile money within 1 hour.
+      - generic [ref=e50]:
+        - paragraph [ref=e51]: Don't have USDT yet? It takes 10 minutes to set up on Binance.
+        - link "How to buy USDT →" [ref=e52] [cursor=pointer]:
+          - /url: /how-to-buy-usdt
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - button "↗ I am in Uganda — sending OUT Pay suppliers in China, UAE, India & more" [ref=e57] [cursor=pointer]:
+          - generic [ref=e58]: ↗
+          - generic [ref=e59]: I am in Uganda — sending OUT
+          - generic [ref=e60]: Pay suppliers in China, UAE, India & more
+        - button "↙ I am abroad — sending HOME Family receives MTN MoMo or bank transfer" [ref=e61] [cursor=pointer]:
+          - generic [ref=e62]: ↙
+          - generic [ref=e63]: I am abroad — sending HOME
+          - generic [ref=e64]: Family receives MTN MoMo or bank transfer
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - paragraph [ref=e67]: Amount You Are Sending
+          - generic [ref=e68]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: Amount
+              - spinbutton [ref=e72]
+            - generic [ref=e74]:
+              - generic [ref=e75]: Currency
+              - combobox [ref=e76] [cursor=pointer]:
+                - option "US Dollar 🇺🇸" [selected]
+                - option "British Pound 🇬🇧"
+                - option "Euro 🇪🇺"
+                - option "Saudi Riyal 🇸🇦"
+                - option "UAE Dirham 🇦🇪"
+                - option "Canadian Dollar 🇨🇦"
+                - option "Australian Dollar 🇦🇺"
+                - option "Qatari Riyal 🇶🇦"
+                - option "Kenyan Shilling 🇰🇪"
+                - option "South African Rand 🇿🇦"
+                - option "Chinese Yuan 🇨🇳"
+                - option "Indian Rupee 🇮🇳"
+                - option "Turkish Lira 🇹🇷"
+                - option "Japanese Yen 🇯🇵"
+                - option "South Korean Won 🇰🇷"
+                - option "Malaysian Ringgit 🇲🇾"
+                - option "Indonesian Rupiah 🇮🇩"
+                - option "Thai Baht 🇹🇭"
+                - option "Singapore Dollar 🇸🇬"
+                - option "Swedish Krona 🇸🇪"
+                - option "Norwegian Krone 🇳🇴"
+                - option "Danish Krone 🇩🇰"
+                - option "Swiss Franc 🇨🇭"
+                - option "Brazilian Real 🇧🇷"
+                - option "Nigerian Naira 🇳🇬"
+                - option "Ghanaian Cedi 🇬🇭"
+                - option "Egyptian Pound 🇪🇬"
+                - option "Moroccan Dirham 🇲🇦"
+                - option "West African CFA 🌍"
+                - option "Zambian Kwacha 🇿🇲"
+                - option "Ethiopian Birr 🇪🇹"
+                - option "Tanzanian Shilling 🇹🇿"
+                - option "Rwandan Franc 🇷🇼"
+        - generic [ref=e77]:
+          - paragraph [ref=e78]: Recipient Details
+          - generic [ref=e79]:
+            - generic [ref=e80]: How should the recipient receive funds?
+            - combobox [ref=e81] [cursor=pointer]:
+              - option "MTN MoMo — 1 hour" [selected]
+              - option "Airtel Money — 1 hour"
+              - option "Uganda Bank Transfer — 1–3 days (+0.5%)"
+              - option "USDT to wallet — 30 min"
+              - option "Cash Pickup Kampala — same day (+1%)"
+          - generic [ref=e82]:
+            - generic [ref=e83]: Recipient Full Name
+            - textbox "As on national ID" [ref=e84]
+          - generic [ref=e85]:
+            - generic [ref=e87]:
+              - generic [ref=e88]: Mobile Money Number
+              - textbox "256700000000" [ref=e89]
+              - paragraph [ref=e90]: "Include country code: 256..."
+            - generic [ref=e92]:
+              - generic [ref=e93]: Network
+              - combobox [ref=e94] [cursor=pointer]:
+                - option "MTN Uganda" [selected]
+                - option "Airtel Uganda"
+        - generic [ref=e95]:
+          - paragraph [ref=e96]: Sending Chain
+          - generic [ref=e97]:
+            - generic [ref=e98] [cursor=pointer]:
+              - radio "Tron (TRC20)RECOMMENDED $0.01" [checked] [ref=e99]
+              - generic [ref=e101]: Tron (TRC20)RECOMMENDED
+              - generic [ref=e102]: $0.01
+            - generic [ref=e103] [cursor=pointer]:
+              - radio "BNB Smart Chain (BEP20) ~$0.05" [ref=e104]
+              - generic [ref=e105]: BNB Smart Chain (BEP20)
+              - generic [ref=e106]: ~$0.05
+            - generic [ref=e107] [cursor=pointer]:
+              - radio "Polygon ~$0.01" [ref=e108]
+              - generic [ref=e109]: Polygon
+              - generic [ref=e110]: ~$0.01
+            - generic [ref=e111] [cursor=pointer]:
+              - radio "Solana ~$0.001" [ref=e112]
+              - generic [ref=e113]: Solana
+              - generic [ref=e114]: ~$0.001
+            - generic [ref=e115] [cursor=pointer]:
+              - radio "Ethereum (ERC20) $3–15" [ref=e116]
+              - generic [ref=e117]: Ethereum (ERC20)
+              - generic [ref=e118]: $3–15
+            - generic [ref=e119] [cursor=pointer]:
+              - radio "Base (USDC) ~$0.001" [ref=e120]
+              - generic [ref=e121]: Base (USDC)
+              - generic [ref=e122]: ~$0.001
+        - generic [ref=e123]:
+          - paragraph [ref=e124]: Your Contact Information
+          - generic [ref=e125]:
+            - generic [ref=e127]:
+              - generic [ref=e128]: Your Full Name *
+              - textbox "Your name" [ref=e129]
+            - generic [ref=e131]:
+              - generic [ref=e132]: Email Address *
+              - textbox "you@email.com" [ref=e133]
+              - paragraph [ref=e134]: Order confirmation + tracking sent here
+          - generic [ref=e135]:
+            - generic [ref=e137]:
+              - generic [ref=e138]: WhatsApp (optional)
+              - textbox "256700000000" [ref=e139]
+            - generic [ref=e141]:
+              - generic [ref=e142]: Telegram Username (optional)
+              - textbox "username (no @)" [ref=e143]
+          - generic [ref=e144]:
+            - generic [ref=e145]: Notes for Coach (optional)
+            - textbox "Any special instructions, supplier contact, order details..." [ref=e146]
+        - button "Lock Rate & Place Order →" [ref=e147] [cursor=pointer]
+        - paragraph [ref=e148]: No payment yet. You will receive a wallet address after submitting. Rate locked for 30 minutes.
+  - contentinfo [ref=e149]:
+    - generic [ref=e150]:
+      - generic [ref=e151]:
+        - generic [ref=e152]:
+          - paragraph [ref=e153]: AFRICATEAMPAY
+          - paragraph [ref=e154]: Uganda's trusted USDT corridor network. Flat 1% fee. Every transaction confirmed.
+        - generic [ref=e155]:
+          - paragraph [ref=e156]: Corridors
+          - link "🇨🇳 Uganda → China" [ref=e157] [cursor=pointer]:
+            - /url: /corridors/china
+          - link "🇦🇪 Uganda → UAE" [ref=e158] [cursor=pointer]:
+            - /url: /corridors/uae
+          - link "🇬🇧 Uganda → UK" [ref=e159] [cursor=pointer]:
+            - /url: /corridors/uk
+          - link "🇰🇪 Uganda → Kenya" [ref=e160] [cursor=pointer]:
+            - /url: /corridors/kenya
+        - generic [ref=e161]:
+          - paragraph [ref=e162]: Tools
+          - link "Calculator" [ref=e163] [cursor=pointer]:
+            - /url: /calculate
+          - link "Track Order" [ref=e164] [cursor=pointer]:
+            - /url: /track
+        - generic [ref=e165]:
+          - paragraph [ref=e166]: Contact Coach
+          - link "WhatsApp →" [ref=e167] [cursor=pointer]:
+            - /url: https://wa.me/256784277664
+          - paragraph [ref=e168]: "Business hours: 8am–8pm EAT"
+      - generic [ref=e170]:
+        - paragraph [ref=e171]: © 2026 AfricaTeamPay. Part of the Africa Team community.
+        - paragraph [ref=e172]: USDT transfers via Tron (TRC20) network.
+  - alert [ref=e173]

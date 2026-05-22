@@ -261,33 +261,42 @@ Vercel Hobby plan blocks sub-daily crons. `vercel.json` had `*/2 * * * *` for th
 ### Environment Variables Added (Session 9)
 None required for Session 9 features.
 
-## What Next Session Must Build (Session 10)
+## Session 10 — What Was Built
 
-### Priority 1 — PDF Receipt Auto-Generation
-When admin marks an order `completed`, auto-generate a PDF receipt.
-- `@react-pdf/renderer` already installed (`npm install @react-pdf/renderer` done in Session 9)
-- **`next.config.js`**: add `serverExternalPackages: ['@react-pdf/renderer']` to next config
-- **`components/ReceiptDocument.jsx`**: React-PDF Document with order details (reference, amount, rate, status, date, chain, wallet)
-- **`app/api/receipt/[reference]/pdf/route.js`**: GET route that renders PDF buffer, responds with `Content-Type: application/pdf`, `Content-Disposition: attachment; filename=receipt-{ref}.pdf`
-- **`app/track/[reference]/page.jsx`**: change "Download Receipt" button href from `/receipt/${reference}` to `/api/receipt/${reference}/pdf`
-- Optional: "Email Receipt" mailto button in admin Send USDT modal
+### ✅ Done
+- `next.config.js` — added `experimental.serverComponentsExternalPackages: ['@react-pdf/renderer']`
+- `components/ReceiptDocument.jsx` — React-PDF document (reference box, transfer details, blockchain section, timestamps, footer)
+- `app/api/receipt/[reference]/pdf/route.js` — GET route: renders PDF buffer, responds `application/pdf`, attachment download; accessible from `payment_received` status onward
+- `app/track/[reference]/page.jsx` — "Download PDF Receipt" button now points to `/api/receipt/${reference}/pdf`
+- `lib/db.js` — added `getSupplierById(id)` and `addSupplierReview(id, rating)` with running-average formula: `(old_avg * count + new_rating) / (count + 1)`
+- `app/api/suppliers/[id]/route.js` — GET supplier by ID
+- `app/api/suppliers/[id]/review/route.js` — POST review (validates 1–5 integer, updates running average)
+- `app/suppliers/page.jsx` — `StarWidget` client component (hover highlight, optimistic update, one-rating-per-session); `SupplierCard` extracted for clean composition
+- `messages/ar.json` — full Arabic translations matching en.json/fr.json key structure
+- `i18n/request.js` — 'ar' added to valid locales; auto-detect from Accept-Language header
+- `components/LanguageSwitcher.jsx` — AR/🇸🇦 button added; title="العربية"
+- `app/layout.jsx` — `dir={locale === 'ar' ? 'rtl' : 'ltr'}` on `<html>` element
+- `components/InboundCalculator.jsx` — client component: currency selector (9 inbound currencies), amount input, live UGX output (fiat→USD→UGX via /api/rates/multi, after 1% fee)
+- `app/page.jsx` — InboundCalculator embedded in inbound banner section
 
-### Priority 2 — Supplier Directory Enhancements
-- **`app/api/suppliers/[id]/route.js`**: GET supplier by ID (directory `app/api/suppliers/[id]/` already created)
-- **`app/api/suppliers/[id]/review/route.js`**: POST review — update running average (formula: `new_avg = (old_avg * count + new_rating) / (count + 1)`)
-- **`lib/db.js`**: add `getSupplierById(id)`, `addSupplierReview(id, rating, review_text)` — updates `community_rating` + `review_count`
-- **`app/suppliers/page.jsx`**: add clickable ★/☆ star rating widget, submit rating via modal
+## What Next Session Must Build (Session 11)
 
-### Priority 3 — Arabic Translation + RTL
-- **`messages/ar.json`**: all keys matching en.json structure, Arabic text, RTL-appropriate
-- **`i18n/request.js`**: add `'ar'` to valid locales check (currently only checks 'en'/'fr')
-- **`components/LanguageSwitcher.jsx`**: add AR button with 🇸🇦 flag
-- **`app/layout.jsx`**: add `dir={locale === 'ar' ? 'rtl' : 'ltr'}` to `<html>` element
+### Priority 1 — Admin: Email/PDF Receipt on Order Completion
+- Add "Email Receipt" mailto button in admin Send USDT modal (compose email with receipt link)
+- Or: trigger auto-email via a new API when admin marks order completed
 
-### Priority 4 — Homepage Inbound Calculator
-- Add live calculator widget to homepage inbound banner section
-- Let diaspora visitors type country + amount → see UGX equivalent live
-- Reuse `/api/rates/multi` endpoint already in place
+### Priority 2 — Supplier Verification + Featured Badge
+- Admin panel: tab or section to manage suppliers (set is_verified, is_featured)
+- `app/api/suppliers/[id]/route.js`: add PATCH for admin to update supplier fields
+
+### Priority 3 — themeColor Viewport Migration
+- Many pages emit Next.js 14 warning: "Unsupported metadata themeColor"
+- Fix: export `generateViewport` returning `{ themeColor: '#D4A017' }` and remove from metadata
+- Affects: layout.jsx + all pages with individual metadata (china, india, turkey, etc.)
+
+### Priority 4 — Track Page: Countdown Timer
+- Rate lock countdown visible on track page for `rate_locked` orders
+- `rate_lock_expires_at` already in DB — compute remaining time client-side, show MM:SS
 
 ## Hard Rules (Do Not Violate)
 

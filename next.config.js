@@ -6,6 +6,9 @@ const nextConfig = {
   images: {
     domains: [],
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@react-pdf/renderer'],
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

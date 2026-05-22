@@ -48,6 +48,7 @@ export default async function RootLayout({ children }) {
   return (
     <html
       lang={locale}
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
       className={`${bebasNeue.variable} ${sora.variable} ${jetbrainsMono.variable}`}
     >
       <head>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import CorridorCard from '@/components/CorridorCard';
+import InboundCalculator from '@/components/InboundCalculator';
 import { getRates } from '@/lib/rates';
 import { getTranslations } from 'next-intl/server';
 
@@ -132,29 +133,27 @@ export default async function HomePage() {
             ))}
           </div>
 
-          {/* Inbound banner */}
+          {/* Inbound banner + live calculator */}
           <div
             style={{
               background: 'rgba(212,160,23,0.06)',
               border: '1px solid rgba(212,160,23,0.15)',
               borderRadius: 12,
               padding: '28px 32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: 20,
             }}
           >
-            <div>
-              <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.04em', marginBottom: 6 }}>
-                🌍 {t('diaspora_title')}
-              </p>
-              <p style={{ color: '#888', fontSize: 14 }}>{t('diaspora_countries')}</p>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 4 }}>
+              <div>
+                <p style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.04em', marginBottom: 6 }}>
+                  🌍 {t('diaspora_title')}
+                </p>
+                <p style={{ color: '#888', fontSize: 14 }}>{t('diaspora_countries')}</p>
+              </div>
+              <Link href="/send-to-uganda" className="btn-gold" style={{ whiteSpace: 'nowrap' }}>
+                {t('send_home_cta')}
+              </Link>
             </div>
-            <Link href="/send-to-uganda" className="btn-gold" style={{ whiteSpace: 'nowrap' }}>
-              {t('send_home_cta')}
-            </Link>
+            <InboundCalculator />
           </div>
         </div>
       </section>
