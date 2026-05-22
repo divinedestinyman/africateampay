@@ -237,6 +237,13 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
 - Navbar account link wired to `/account`
 - Railway DB: `users` table + `idx_users_email` + `idx_users_session` indexes migrated
 
+### ✅ Build Fixes (commit fc83546 — fixed 3 errors blocking Vercel since Session 4)
+All Vercel deployments from Sessions 4–8 were failing due to these 3 errors:
+1. `app/trade-calculator/page.jsx` — had both `'use client'` and `export const metadata = undefined`. Next.js forbids metadata exports in Client Components. Fix: removed the metadata export line.
+2. `app/layout.jsx` — `description: 'Uganda's USDT...'` (apostrophe in single-quoted string terminates early → SyntaxError). Fix: changed to double quotes.
+3. `app/page.jsx` — same unescaped apostrophe in description string. Fix: changed to double quotes.
+After these fixes, `npm run build` succeeds: ✓ Compiled successfully, ✓ 47/47 static pages.
+
 ## What Next Session Must Build (Session 9)
 
 ### Priority 1 — PDF Receipt Auto-Generation
