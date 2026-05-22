@@ -204,40 +204,11 @@ Deploy: Push to `main` branch → Vercel auto-deploys.
 - `app/receipt/[reference]/page.jsx` — Server-rendered printable receipt (print-to-PDF via browser).
 
 ### ✅ Completed in Session 6
-
-#### 1. TxStatusCard component (track page is broken without it)
-`app/track/[reference]/page.jsx` references `<TxStatusCard>` but the component was never written. The file has this placeholder where the old TX hash block was:
-```jsx
-{order.blockchain_tx_hash && (
-  <TxStatusCard hash={order.blockchain_tx_hash} chain={order.sending_chain || 'trc20'} reference={order.reference} />
-)}
-```
-Add `TxStatusCard` as a client component at the top of the file:
-- Polls `/api/tx-status?hash=...&chain=...` every 30s while `!confirmed`
-- Shows: TX hash (truncated), confirmations count (e.g. "14 confirmations"), confirmed ✅ / pending ⏳ badge
-- Explorer link with correct chain (tronscan / bscscan / polygonscan etc)
-- Download receipt button: `<a href={/receipt/${reference}}>Download Receipt</a>`
-
-#### 2. Admin disputes tab
-`app/admin/page.jsx` needs a "Disputes" tab alongside the orders table:
-- Fetch `GET /api/disputes` with admin auth header (add this route — currently only `POST /api/disputes` and `PATCH /api/disputes/[id]` exist)
-- Show: reference, issue type, contact, expected vs received, status, created date
-- Action buttons: "Resolve", "Refund", "Need Info" — call `PATCH /api/disputes/[id]`
-- Filter by status: open / resolved / refunded
-- Need to add `GET /api/disputes/route.js` as well (returns all disputes with admin auth)
-
-#### 3. GET /api/disputes route (missing)
-Add `GET` handler to `app/api/disputes/route.js` (currently only has `POST`):
-```js
-export async function GET(request) {
-  const token = request.headers.get('x-admin-token');
-  if (!token || token !== process.env.ADMIN_TOKEN) return 401;
-  const { searchParams } = new URL(request.url);
-  const status = searchParams.get('status') || undefined;
-  const disputes = await getDisputes({ status });
-  return NextResponse.json({ disputes });
-}
-```
+- `TxStatusCard` component written and integrated into track page
+- `GET /api/disputes` route added with admin auth
+- Disputes tab added to admin dashboard
+- Blockchain monitor cron endpoint created
+- `vercel.json` created with 2-minute cron schedule
 
 ## Session 6 — What Was Built
 
@@ -254,6 +225,32 @@ export async function GET(request) {
 | `CRON_SECRET` | Bearer token Vercel sends to cron endpoints (optional but recommended) |
 
 ## What Next Session Must Build (Session 7)
+
+### Priority 1 — PDF Receipt Auto-Generation
+When admin marks an order `completed`, auto-generate a PDF receipt and optionally email it.
+- Use `app/receipt/[reference]/page.jsx` as the HTML template (already built)
+- Add a `GET /api/receipt/[reference]/pdf` route that returns a PDF using a server-side headless approach
+- Options: Puppeteer (full browser, larger cold start) or `@react-pdf/renderer` (lighter, no browser needed)
+- Store `receipt_pdf_url` in the orders table when generated
+- Add "Email Receipt" button in admin Send USDT modal
+
+### Priority 2 — PWA (Progressive Web App)
+Make the site installable on mobile for repeat customers.
+- Add `app/manifest.json` with name, short_name, icons, theme_color (#0A0A0A), background_color, display: standalone
+- Add `<link rel="manifest">` to `app/layout.jsx`
+- Add service worker for offline page (just the track page skeleton)
+- Add 192×192 and 512×512 icons (gold ATP logo on dark background)
+
+### Priority 3 — Supplier Directory Enhancements
+- Add supplier verification badge (Coach-verified vs community-submitted)
+- Add rating/review system (1–5 stars, text review)
+- Add `GET /api/suppliers/[id]` route for individual supplier page
+- Create `app/suppliers/[id]/page.jsx` — full supplier profile with contact methods
+
+### Priority 4 — Homepage Inbound Calculator
+- Add a live calculator widget to the homepage inbound banner section
+- Let diaspora visitors type their country + amount and see UGX equivalent live
+- Reuse the `/api/rates/multi` endpoint already in place
 
 ## Hard Rules (Do Not Violate)
 
