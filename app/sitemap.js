@@ -24,6 +24,7 @@ export default function sitemap() {
     { path: '/corridors/from-uk', priority: 0.8, freq: 'weekly' },
     { path: '/corridors/from-uae', priority: 0.8, freq: 'weekly' },
     { path: '/corridors/from-saudi', priority: 0.8, freq: 'weekly' },
+    { path: '/about', priority: 0.7, freq: 'monthly' },
     { path: '/account/register', priority: 0.5, freq: 'monthly' },
     { path: '/account/login', priority: 0.5, freq: 'monthly' },
   ];

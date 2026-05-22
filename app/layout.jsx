@@ -36,6 +36,20 @@ export const metadata = {
     siteName: 'AfricaTeamPay',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'https://africateampay.vercel.app/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'AfricaTeamPay — Uganda USDT Corridor Network',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AfricaTeamPay — Uganda USDT Corridor Network',
+    description: '80% cheaper than your bank. Flat 1% fee. 15 corridors.',
+    images: ['https://africateampay.vercel.app/opengraph-image'],
   },
   metadataBase: new URL('https://africateampay.vercel.app'),
 };

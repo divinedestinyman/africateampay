@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import CorridorCard from '@/components/CorridorCard';
 import InboundCalculator from '@/components/InboundCalculator';
+import StatsCounter from '@/components/StatsCounter';
+import Testimonials from '@/components/Testimonials';
 import { getRates } from '@/lib/rates';
 import { getTranslations } from 'next-intl/server';
 
@@ -192,6 +194,12 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Stats counter ────────────────────────────────────────────── */}
+      <StatsCounter />
+
+      {/* ── Testimonials ─────────────────────────────────────────────── */}
+      <Testimonials />
 
       {/* ── Final CTA ────────────────────────────────────────────────── */}
       <section style={{ padding: '64px 24px', textAlign: 'center' }}>
