@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "track": "Track",
+    "calculate": "Calculate →",
+    "account": "Account",
+    "lang_en": "EN",
+    "lang_fr": "FR"
+  },
+  "home": {
+    "hero_label": "Uganda's USDT Corridor Network",
+    "hero_title": "SEND MONEY ANYWHERE",
+    "hero_subtitle": "Import from China, India, Turkey, UAE & more. Pay suppliers in USDT. Flat 1% fee. Faster than your bank.",
+    "hero_cta_send": "Send Money →",
+    "hero_cta_calculate": "Calculate Cost",
+    "inbound_label": "Diaspora Remittances",
+    "inbound_title": "SENDING MONEY TO UGANDA?",
+    "inbound_subtitle": "From USA, UK, UAE, Saudi Arabia, Canada and more. Fast delivery to MTN MoMo or Airtel Money.",
+    "inbound_cta": "Send to Uganda →"
+  },
+  "send_uganda": {
+    "label": "Diaspora Remittances",
+    "title": "SEND MONEY TO UGANDA",
+    "subtitle": "From anywhere in the world — direct to MTN MoMo or Airtel Money. USDT bridge, flat 1% fee.",
+    "how_title": "HOW IT WORKS",
+    "step1_title": "Send USDT",
+    "step1_desc": "Send USDT from any exchange to our wallet. TRC20 recommended ($0.01 fee).",
+    "step2_title": "We Convert",
+    "step2_desc": "Coach converts USDT → UGX at live market rate minus 1% fee.",
+    "step3_title": "MoMo Delivered",
+    "step3_desc": "Recipient receives UGX on MTN MoMo or Airtel Money within 1 hour."
+  },
+  "buy_usdt": {
+    "label": "Beginner Guide",
+    "title": "HOW TO BUY USDT",
+    "subtitle": "New to crypto? Follow this step-by-step guide to buy USDT on Binance — the world's largest exchange.",
+    "step1_title": "Create Binance Account",
+    "step2_title": "Complete KYC",
+    "step3_title": "Buy USDT",
+    "step4_title": "Send to Wallet"
+  }
+}

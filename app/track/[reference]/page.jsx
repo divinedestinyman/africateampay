@@ -167,6 +167,100 @@ function formatCountdown(secs) {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+function SaveTemplateModal({ order, onClose }) {
+  const [name, setName] = useState(`${order.corridor_id?.toUpperCase()} Transfer`);
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [reminderDay, setReminderDay] = useState(1);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [authError, setAuthError] = useState(false);
+
+  async function save() {
+    setSaving(true);
+    const res = await fetch('/api/account/templates', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        template_name: name,
+        direction: order.direction,
+        corridor_id: order.corridor_id,
+        recipient_name: order.recipient_name,
+        recipient_contact: order.recipient_whatsapp,
+        settlement_method: order.settlement_method,
+        supplier_name: order.supplier_name,
+        supplier_country: order.supplier_country,
+        supplier_payment_method: order.supplier_payment_method,
+        typical_amount_usdt: order.amount_usdt,
+        sending_chain: order.sending_chain || 'trc20',
+        goods_description: order.goods_description,
+        reminder_enabled: reminderEnabled,
+        reminder_day: reminderEnabled ? reminderDay : null,
+      }),
+    });
+    setSaving(false);
+    if (res.status === 401) { setAuthError(true); return; }
+    if (res.ok) setSaved(true);
+  }
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 200,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
+    }} onClick={onClose}>
+      <div className="card" style={{ maxWidth: 440, width: '100%', padding: 28 }} onClick={e => e.stopPropagation()}>
+        {saved ? (
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: 32, marginBottom: 12 }}>✅</p>
+            <p style={{ fontSize: 15, color: '#F5F5F5', marginBottom: 8 }}>Template saved!</p>
+            <p style={{ fontSize: 13, color: '#666', marginBottom: 20 }}>Find it in your account dashboard.</p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <a href="/account/dashboard" className="btn-gold" style={{ padding: '10px 20px', fontSize: 13 }}>View Dashboard</a>
+              <button onClick={onClose} className="btn-outline" style={{ padding: '10px 16px', fontSize: 13 }}>Close</button>
+            </div>
+          </div>
+        ) : authError ? (
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: 14, color: '#999', marginBottom: 20 }}>Sign in to save transfer templates.</p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <a href={`/account/login?redirect=/track/${order.reference}`} className="btn-gold" style={{ padding: '10px 18px', fontSize: 13 }}>Sign In</a>
+              <a href="/account/register" className="btn-outline" style={{ padding: '10px 18px', fontSize: 13 }}>Register Free</a>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h3 style={{ fontFamily: 'var(--font-bebas)', fontSize: 22, letterSpacing: '0.04em', marginBottom: 20 }}>SAVE AS TEMPLATE</h3>
+            <div style={{ marginBottom: 16 }}>
+              <label className="label" style={{ display: 'block', marginBottom: 6 }}>Template Name</label>
+              <input className="input" value={name} onChange={e => setName(e.target.value)} style={{ width: '100%' }} />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: 14, color: '#ccc' }}>
+                <input type="checkbox" checked={reminderEnabled} onChange={e => setReminderEnabled(e.target.checked)} />
+                Enable monthly reminder via Telegram
+              </label>
+              {reminderEnabled && (
+                <div style={{ marginTop: 12 }}>
+                  <label className="label" style={{ display: 'block', marginBottom: 6 }}>Remind me on day</label>
+                  <input className="input" type="number" min={1} max={28} value={reminderDay}
+                    onChange={e => setReminderDay(Number(e.target.value))}
+                    style={{ width: 80 }} />
+                  <span style={{ color: '#666', fontSize: 13, marginLeft: 8 }}>of each month</span>
+                </div>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={save} disabled={saving || !name} className="btn-gold" style={{ flex: 1 }}>
+                {saving ? 'Saving…' : 'Save Template'}
+              </button>
+              <button onClick={onClose} className="btn-outline" style={{ padding: '10px 16px' }}>Cancel</button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function TrackReferencePage({ params }) {
   const { reference } = params;
   const [order, setOrder] = useState(null);
@@ -174,6 +268,7 @@ export default function TrackReferencePage({ params }) {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [sinceRefresh, setSinceRefresh] = useState(0);
+  const [showSaveModal, setShowSaveModal] = useState(false);
   const refreshRef = useRef(null);
   const sinceRef = useRef(null);
   const secsRemaining = useCountdown(order?.rate_lock_expires_at);
@@ -551,6 +646,9 @@ export default function TrackReferencePage({ params }) {
             </div>
           )}
 
+          {/* Save template modal */}
+          {showSaveModal && <SaveTemplateModal order={order} onClose={() => setShowSaveModal(false)} />}
+
           {/* CTA buttons */}
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
             {process.env.NEXT_PUBLIC_COACH_WHATSAPP && (
@@ -567,6 +665,9 @@ export default function TrackReferencePage({ params }) {
             <Link href="/send" className="btn-outline" style={{ flex: 1, textAlign: 'center', padding: '12px 16px' }}>
               New Order
             </Link>
+            <button onClick={() => setShowSaveModal(true)} className="btn-outline" style={{ flex: 1, textAlign: 'center', padding: '12px 16px' }}>
+              + Save Template
+            </button>
           </div>
 
           <p style={{ fontSize: 12, color: '#444', textAlign: 'center' }}>

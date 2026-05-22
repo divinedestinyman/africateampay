@@ -257,6 +257,19 @@ CREATE TABLE IF NOT EXISTS rates_log (
   fetched_at TIMESTAMP     DEFAULT NOW()
 );
 
+-- ── USERS ────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS users (
+  id             UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
+  email          VARCHAR(255)  UNIQUE NOT NULL,
+  name           VARCHAR(255)  NOT NULL,
+  password_hash  VARCHAR(255)  NOT NULL,
+  session_token  VARCHAR(255),
+  created_at     TIMESTAMP     DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_email         ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_session       ON users(session_token);
+
 -- ── INDEXES ───────────────────────────────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_orders_status       ON orders(status);
 CREATE INDEX IF NOT EXISTS idx_orders_reference    ON orders(reference);
