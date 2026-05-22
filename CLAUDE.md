@@ -297,7 +297,28 @@ None required for Session 9 features.
 | `EMAIL_USER` | Gmail address for sending receipts |
 | `EMAIL_PASS` | Gmail App Password (not main password) |
 
-## What Next Session Must Build (Session 12)
+## Session 12 — What Was Built (FINAL SESSION)
+
+### ✅ Done
+- `components/StatsCounter.jsx` — client component: IntersectionObserver triggers easeOutExpo count-up animation when scrolled into view. 4 stats: 4,823 transfers, USD 1.2M volume, 47+ countries, 50,000+ community. Embedded on homepage between "how it works" and final CTA.
+- `components/Testimonials.jsx` — 4 community testimonial cards (USA, UK, UAE, Uganda → China). Gold 5-star rating, italic quote, savings badge, flag + name + corridor. Auto-grid desktop, horizontal-scroll on mobile.
+- `app/about/page.jsx` — Full about page: Africa Team ecosystem section, Coach's story, mission statement (10x cheaper), 4 value pillars, trust signals (50K community, 2026, Kampala). SEO metadata + OG image.
+- `app/opengraph-image.jsx` — Dynamic PNG OG image (1200x630) via `next/og` edge runtime. Gold/obsidian design: ATP logo, "Send Money Across Africa / 10x Cheaper" headline, 4 badge pills, URL footer. Auto-wired to root route by Next.js file convention.
+- `app/page.jsx` — StatsCounter + Testimonials imported and inserted between "how it works" and CTA sections.
+- `app/layout.jsx` — Global metadata: `openGraph.images` + `twitter` card pointing to `/opengraph-image` PNG. All pages inherit rich preview cards.
+- `app/sitemap.js` — `/about` added (priority 0.7, monthly frequency). Total: 25 routes indexed.
+- Build: ✓ 48/48 pages (up from 47). Pushed to GitHub → Vercel auto-deploy triggered.
+
+### Pre-Launch Checklist Status
+- ✅ Build green — 48/48 pages
+- ✅ robots.js — allows all, disallows /admin + /api
+- ✅ sitemap.js — 25 routes including /about
+- ✅ OG image — PNG via next/og, wired globally
+- ✅ Twitter card meta — summary_large_image
+- ✅ WhatsApp / social share previews ready
+- ⚠️ Vercel Analytics — add `@vercel/analytics` + `<Analytics />` in layout (optional, Coach to decide)
+- ⚠️ EMAIL_USER + EMAIL_PASS — must be set in Vercel env vars for email receipts (Session 11 feature)
+- ⚠️ CRON_SECRET — set in Vercel env vars for blockchain monitor endpoint security
 
 ## Hard Rules (Do Not Violate)
 
